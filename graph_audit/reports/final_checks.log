@@ -1,0 +1,27 @@
+./.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+saved reports/v2_prot_fixed_final.pt from graph_audit/wt-fixes/src/boltz/__init__.py in 33.2 s
+A: ./src/boltz/__init__.py 9.4 s
+B: graph_audit/wt-fixes/src/boltz/__init__.py 33.2 s
+  sample_atom_coords           shape=(2, 1056, 3)           max|d|=0.000e+00  mean|d|=0.000e+00  RMSD=0.0000 A
+  plddt                        shape=(2, 136)               max|d|=0.000e+00  mean|d|=0.000e+00
+  pae                          shape=(2, 136, 136)          max|d|=0.000e+00  mean|d|=0.000e+00
+  pde                          shape=(2, 136, 136)          max|d|=0.000e+00  mean|d|=0.000e+00
+  ptm                          shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  iptm                         shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  ligand_iptm                  shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  protein_iptm                 shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pair_chains_iptm             shape=(2, 1, 1)              max|d|=1.788e-07  mean|d|=8.941e-08
+  complex_plddt                shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_iplddt               shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_pde                  shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_ipde                 shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pdistogram                   shape=(1, 136, 136, 1, 64)   max|d|=0.000e+00  mean|d|=0.000e+00
+  s                            shape=(1, 136, 384)          max|d|=0.000e+00  mean|d|=0.000e+00
+  z                            shape=(1, 136, 136, 128)     max|d|=0.000e+00  mean|d|=0.000e+00
+./.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+unpadded 1 [2.193258762359619, 0.33750104904174805]
+unpadded 2 [2.2637767791748047, 0.3488638997077942]
+unpadded 3 [2.3161749839782715, 0.3714299201965332]
+padded 1 [2.2114572525024414, 0.3578017055988312]
+padded 2 [2.2417104244232178, 0.35348665714263916]
+padded 3 [2.226928472518921, 0.351565957069397]

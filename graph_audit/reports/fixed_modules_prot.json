@@ -1,0 +1,167 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "rel_pos": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": true,
+   "call_function_nodes": 64,
+   "seconds": 0.1
+  },
+  "export_strict": {
+   "ok": true,
+   "call_function_nodes": 64,
+   "seconds": 0.3
+  }
+ },
+ "template_module": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": true,
+   "call_function_nodes": 388,
+   "seconds": 0.5
+  },
+  "export_strict": {
+   "ok": true,
+   "call_function_nodes": 368,
+   "seconds": 1.0
+  }
+ },
+ "msa_module": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": true,
+   "call_function_nodes": 938,
+   "seconds": 0.6
+  },
+  "export_strict": {
+   "ok": true,
+   "call_function_nodes": 890,
+   "seconds": 1.9
+  }
+ },
+ "pairformer_module": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": true,
+   "call_function_nodes": 11263,
+   "seconds": 31.9
+  },
+  "export_strict": {
+   "ok": true,
+   "call_function_nodes": 10623,
+   "seconds": 58.2
+  }
+ },
+ "diffusion_conditioning": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": true,
+   "call_function_nodes": 86,
+   "seconds": 0.4
+  },
+  "export_strict": {
+   "ok": true,
+   "call_function_nodes": 86,
+   "seconds": 1.0
+  }
+ },
+ "structure_module.score_model": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": true,
+   "call_function_nodes": 1564,
+   "seconds": 5.8
+  },
+  "export_strict": {
+   "ok": true,
+   "call_function_nodes": 1564,
+   "seconds": 9.6
+  }
+ },
+ "confidence_module": {
+  "dynamo": {
+   "graph_count": 5,
+   "graph_break_count": 4,
+   "break_sites": [
+    {
+     "where": "boltz/model/layers/confidence_utils.py:44 (compute_frame_pred)",
+     "reasons": [
+      {
+       "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.ht",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/modules/confidencev2.py:221 (forward)",
+      "boltz/model/modules/confidencev2.py:481 (forward)",
+      "boltz/model/layers/confidence_utils.py:137 (compute_ptms)",
+      "boltz/model/layers/confidence_utils.py:44 (compute_frame_pred)"
+     ]
+    },
+    {
+     "where": "boltz/model/modules/confidencev2.py:480 (forward)",
+     "reasons": [
+      {
+       "reason": "step_unsupported",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/modules/confidencev2.py:480 (forward)"
+     ]
+    },
+    {
+     "where": "boltz/model/layers/confidence_utils.py:230 (compute_ptms)",
+     "reasons": [
+      {
+       "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.ht",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/layers/confidence_utils.py:230 (compute_ptms)"
+     ]
+    }
+   ]
+  },
+  "export_nonstrict": {
+   "ok": true,
+   "call_function_nodes": 1679,
+   "seconds": 2.5
+  },
+  "export_strict": {
+   "ok": false,
+   "error": "UserError: Consider annotating your code using torch._check*(). Could not extract specialized integer from data-dependent expression u0 (unhinted: u0).  (Size-like symbols: u0)\nCaused by: for id in torch.unique(asym_id_token[i]):  # graph_audit/wt-fixes/src/boltz/model/layers/confidence_utils.py:44 in compute_frame_pred (_dynamo/variables/tensor.py:3083 in evaluate_expr)\nFor more information, run with TORCH_LOGS=\"dynamic\"\nFor extended logs when we create symbols, also add TORCHDYNAMO_EXTENDED_DEBUG_CREATE_SYMBOL=\"u0\"\nIf you suspect the guard was triggered from C++, add TORCHDYNAMO_EXTENDED_DEBUG_CPP=1\nFor more debugging help, see https://docs.google.com/document/d/1HSuTTVvYH1pTew89Rtpeu84Ht3nQEFTYhAX3Ypa_xJs/edit?usp=sharing",
+   "at": "",
+   "seconds": 2.0
+  }
+ }
+}

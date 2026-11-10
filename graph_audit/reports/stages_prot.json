@@ -1,0 +1,103 @@
+{
+ "device": "mps",
+ "config": {
+  "recycling_steps": 3,
+  "sampling_steps": 200,
+  "diffusion_samples": 1,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "n_tokens": 136,
+ "n_atoms": 1056,
+ "n_msa": 75,
+ "total_seconds": 9.950963084003888,
+ "rows": [
+  {
+   "region": "input_embedder",
+   "seconds": 0.010645832982845604,
+   "calls": 1
+  },
+  {
+   "region": "rel_pos",
+   "seconds": 0.0009020830038934946,
+   "calls": 1
+  },
+  {
+   "region": "contact_conditioning",
+   "seconds": 0.001259499927982688,
+   "calls": 1
+  },
+  {
+   "region": "template_module",
+   "seconds": 0.08990662498399615,
+   "calls": 4
+  },
+  {
+   "region": "msa_module",
+   "seconds": 0.3048113330733031,
+   "calls": 4
+  },
+  {
+   "region": "pairformer_module",
+   "seconds": 3.7067188328364864,
+   "calls": 4
+  },
+  {
+   "region": "distogram_module",
+   "seconds": 0.0005657909205183387,
+   "calls": 1
+  },
+  {
+   "region": "diffusion_conditioning",
+   "seconds": 0.016224374994635582,
+   "calls": 1
+  },
+  {
+   "region": "structure_module.score_model",
+   "seconds": 4.503463038359769,
+   "calls": 200
+  },
+  {
+   "region": "confidence_module",
+   "seconds": 0.0930658329743892,
+   "calls": 1
+  },
+  {
+   "region": "bfactor_module",
+   "seconds": 0.000181750045157969,
+   "calls": 1
+  },
+  {
+   "region": "  compute_random_augmentation",
+   "seconds": 0.07287582813296467,
+   "calls": 200
+  },
+  {
+   "region": "  potentials.compute_gradient",
+   "seconds": 0.2909027540590614,
+   "calls": 2740
+  },
+  {
+   "region": "  weighted_rigid_align",
+   "seconds": 0.24953987856861204,
+   "calls": 200
+  },
+  {
+   "region": "structure_module.sample (whole loop)",
+   "seconds": 5.721498333034106,
+   "calls": 1
+  },
+  {
+   "region": "  confidence.compute_frame_pred",
+   "seconds": 0.003906999947503209,
+   "calls": 1
+  },
+  {
+   "region": "  confidence.compute_ptms",
+   "seconds": 0.0050236249808222055,
+   "calls": 1
+  }
+ ]
+}

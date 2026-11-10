@@ -1,0 +1,313 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "graph_count": 21,
+ "graph_break_count": 20,
+ "op_count": 40640,
+ "ops_per_graph": [
+  218,
+  14,
+  31,
+  35154,
+  7,
+  60,
+  1488,
+  3,
+  2,
+  10,
+  8,
+  8,
+  1488,
+  4,
+  31,
+  18,
+  1856,
+  67,
+  14,
+  87,
+  72
+ ],
+ "break_sites": [
+  {
+   "where": "boltz/model/modules/encodersv2.py:64 (forward)",
+   "reasons": [
+    {
+     "reason": "Data-dependent branching Explanation: Detected data-dependent branching (e.g. `if my_tensor.sum() > 0:`). Dynamo does not support tracing dynamic control flow. The branch condition involves a tensor computed as follows: # File \"./src/boltz/model/modules/trunkv2.py\", line 203, in forward, code: cyclic = feats[\"cyclic_period\"].clamp(max=1.0).unsqueeze(-1) l_feats_cyclic_peri",
+     "n": 1
+    },
+    {
+     "reason": "generic_jump TensorVariable()",
+     "n": 1
+    },
+    {
+     "reason": "Data-dependent branching Explanation: Detected data-dependent branching (e.g. `if my_tensor.sum() > 0:`). Dynamo does not support tracing dynamic control flow. The branch condition involves a tensor computed as follows: # File \"./src/boltz/model/modules/encodersv2.py\", line 64, in forward, code: if self.cyclic_pos_enc and torch.any(feats[\"cyclic_period\"] > 0): l_feats_cycl",
+     "n": 1
+    }
+   ],
+   "count": 3,
+   "stack": [
+    "boltz/model/models/boltz2.py:425 (forward)",
+    "boltz/model/modules/encodersv2.py:64 (forward)"
+   ]
+  },
+  {
+   "where": "boltz/model/modules/diffusionv2.py:372 (sample)",
+   "reasons": [
+    {
+     "reason": "Unsupported Tensor.item() call with capture_scalar_outputs=False Explanation: Dynamo does not support tracing `Tensor.item()` with config.capture_scalar_outputs=False. Hint: Set `torch._dynamo.config.capture_scalar_outputs = True` or `export TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1` to include these operations in the captured graph. Developer debug context: call_method TensorVariable() item () {} For ",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/models/boltz2.py:534 (forward)",
+    "boltz/model/modules/diffusionv2.py:372 (sample)"
+   ]
+  },
+  {
+   "where": "boltz/model/loss/diffusionv2.py:34 (weighted_rigid_align)",
+   "reasons": [
+    {
+     "reason": "generic_jump TensorVariable()",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/loss/diffusionv2.py:34 (weighted_rigid_align)"
+   ]
+  },
+  {
+   "where": "boltz/model/loss/diffusionv2.py:57 (torch_dynamo_resume_in_weighted_rigid_align_at_34)",
+   "reasons": [
+    {
+     "reason": "generic_jump TensorVariable()",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/loss/diffusionv2.py:57 (torch_dynamo_resume_in_weighted_rigid_align_at_34)"
+   ]
+  },
+  {
+   "where": "boltz/model/modules/confidencev2.py:480 (forward)",
+   "reasons": [
+    {
+     "reason": "step_unsupported",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/modules/confidencev2.py:480 (forward)"
+   ]
+  },
+  {
+   "where": "boltz/model/layers/confidence_utils.py:230 (compute_ptms)",
+   "reasons": [
+    {
+     "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.ht",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/layers/confidence_utils.py:230 (compute_ptms)"
+   ]
+  }
+ ],
+ "breaks_in_order": [
+  {
+   "reason": "Data-dependent branching Explanation: Detected data-dependent branching (e.g. `if my_tensor.sum() > 0:`). Dynamo does not support tracing dynamic control flow. The branch condition involves a tensor computed as follows: # File \"./src/boltz/model/modules/trunkv2.py\", line 203, in forward, code: cyclic = feats[\"cyclic_period\"].clamp(max=1.0).unsqueeze(-1) l_feats_cyclic_period_: graph input (L_feats_cyclic_period_) # File \"./src/boltz/model/modules/encodersv2.py\", line 64, in forward, code: if self.cyclic_pos_enc and torch.any(feats[\"cyclic_perio",
+   "user_stack": [
+    "boltz/model/models/boltz2.py:425 (forward)",
+    "boltz/model/modules/encodersv2.py:64 (forward)"
+   ]
+  },
+  {
+   "reason": "generic_jump TensorVariable()",
+   "user_stack": [
+    "boltz/model/modules/encodersv2.py:64 (forward)"
+   ]
+  },
+  {
+   "reason": "Unsupported Tensor.item() call with capture_scalar_outputs=False Explanation: Dynamo does not support tracing `Tensor.item()` with config.capture_scalar_outputs=False. Hint: Set `torch._dynamo.config.capture_scalar_outputs = True` or `export TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1` to include these operations in the captured graph. Developer debug context: call_method TensorVariable() item () {} For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0124.html",
+   "user_stack": [
+    "boltz/model/models/boltz2.py:534 (forward)",
+    "boltz/model/modules/diffusionv2.py:372 (sample)"
+   ]
+  },
+  {
+   "reason": "generic_jump TensorVariable()",
+   "user_stack": [
+    "boltz/model/loss/diffusionv2.py:34 (weighted_rigid_align)"
+   ]
+  },
+  {
+   "reason": "generic_jump TensorVariable()",
+   "user_stack": [
+    "boltz/model/loss/diffusionv2.py:57 (torch_dynamo_resume_in_weighted_rigid_align_at_34)"
+   ]
+  },
+  {
+   "reason": "Data-dependent branching Explanation: Detected data-dependent branching (e.g. `if my_tensor.sum() > 0:`). Dynamo does not support tracing dynamic control flow. The branch condition involves a tensor computed as follows: # File \"./src/boltz/model/modules/encodersv2.py\", line 64, in forward, code: if self.cyclic_pos_enc and torch.any(feats[\"cyclic_period\"] > 0): l_feats_cyclic_period_: graph input (L_feats_cyclic_period_) # File \"./src/boltz/model/modules/encodersv2.py\", line 64, in forward, code: if self.cyclic_pos_enc and torch.any(feats[\"cycli",
+   "user_stack": [
+    "boltz/model/models/boltz2.py:590 (forward)",
+    "boltz/model/modules/confidencev2.py:126 (forward)",
+    "boltz/model/modules/confidencev2.py:166 (forward)",
+    "boltz/model/modules/encodersv2.py:64 (forward)"
+   ]
+  },
+  {
+   "reason": "step_unsupported",
+   "user_stack": [
+    "boltz/model/modules/confidencev2.py:480 (forward)"
+   ]
+  },
+  {
+   "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html",
+   "user_stack": [
+    "boltz/model/layers/confidence_utils.py:230 (compute_ptms)"
+   ]
+  }
+ ],
+ "graph_map": [
+  {
+   "graph": 0,
+   "ops": 348,
+   "starts_at": "boltz/model/modules/trunkv2.py:173 (forward)",
+   "ends_at": "boltz/model/models/boltz2.py:422 (forward)"
+  },
+  {
+   "graph": 1,
+   "ops": 14,
+   "starts_at": "boltz/model/modules/encodersv2.py:51 (forward)",
+   "ends_at": "boltz/model/modules/encodersv2.py:64 (forward)"
+  },
+  {
+   "graph": 2,
+   "ops": 36,
+   "starts_at": "boltz/model/modules/encodersv2.py:73 (torch_dynamo_resume_in_forward_at_64)",
+   "ends_at": "boltz/model/modules/encodersv2.py:109 (torch_dynamo_resume_in_forward_at_64)"
+  },
+  {
+   "graph": 3,
+   "ops": 54518,
+   "starts_at": "boltz/model/models/boltz2.py:426 (torch_dynamo_resume_in_forward_at_425)",
+   "ends_at": "?"
+  },
+  {
+   "graph": 4,
+   "ops": 7,
+   "starts_at": "boltz/model/modules/diffusionv2.py:280 (sample_schedule)",
+   "ends_at": "boltz/model/modules/diffusionv2.py:292 (sample_schedule)"
+  },
+  {
+   "graph": 5,
+   "ops": 63,
+   "starts_at": "boltz/model/modules/utils.py:293 (random_quaternions)",
+   "ends_at": "boltz/model/modules/utils.py:63 (compute_random_augmentation)"
+  },
+  {
+   "graph": 6,
+   "ops": 2040,
+   "starts_at": "boltz/model/modules/diffusionv2.py:260 (preconditioned_network_forward)",
+   "ends_at": "boltz/model/modules/diffusionv2.py:271 (preconditioned_network_forward)"
+  },
+  {
+   "graph": 7,
+   "ops": 4,
+   "starts_at": "boltz/model/potentials/potentials.py:659 (compute_args)",
+   "ends_at": "boltz/model/potentials/potentials.py:96 (compute_gradient)"
+  },
+  {
+   "graph": 8,
+   "ops": 2,
+   "starts_at": "boltz/model/potentials/potentials.py:602 (compute_args)",
+   "ends_at": "boltz/model/potentials/potentials.py:96 (compute_gradient)"
+  },
+  {
+   "graph": 9,
+   "ops": 16,
+   "starts_at": "boltz/model/loss/diffusionv2.py:18 (weighted_rigid_align)",
+   "ends_at": "boltz/model/loss/diffusionv2.py:34 (weighted_rigid_align)"
+  },
+  {
+   "graph": 10,
+   "ops": 11,
+   "starts_at": "boltz/model/loss/diffusionv2.py:42 (torch_dynamo_resume_in_weighted_rigid_align_at_34)",
+   "ends_at": "boltz/model/loss/diffusionv2.py:57 (torch_dynamo_resume_in_weighted_rigid_align_at_34)"
+  },
+  {
+   "graph": 11,
+   "ops": 12,
+   "starts_at": "boltz/model/loss/diffusionv2.py:65 (torch_dynamo_resume_in_weighted_rigid_align_at_57)",
+   "ends_at": "boltz/model/loss/diffusionv2.py:84 (torch_dynamo_resume_in_weighted_rigid_align_at_57)"
+  },
+  {
+   "graph": 12,
+   "ops": 2041,
+   "starts_at": "boltz/model/modules/diffusionv2.py:259 (preconditioned_network_forward)",
+   "ends_at": "boltz/model/modules/diffusionv2.py:271 (preconditioned_network_forward)"
+  },
+  {
+   "graph": 13,
+   "ops": 9,
+   "starts_at": "?",
+   "ends_at": "boltz/model/models/boltz2.py:601 (torch_dynamo_resume_in_forward_at_534)"
+  },
+  {
+   "graph": 14,
+   "ops": 36,
+   "starts_at": "boltz/model/modules/encodersv2.py:73 (torch_dynamo_resume_in_forward_at_64)",
+   "ends_at": "boltz/model/modules/encodersv2.py:109 (torch_dynamo_resume_in_forward_at_64)"
+  },
+  {
+   "graph": 15,
+   "ops": 22,
+   "starts_at": "boltz/model/modules/trunkv2.py:37 (forward)",
+   "ends_at": "boltz/model/modules/trunkv2.py:57 (forward)"
+  },
+  {
+   "graph": 16,
+   "ops": 2936,
+   "starts_at": "boltz/model/layers/dropout.py:32 (get_dropout_mask)",
+   "ends_at": "?"
+  },
+  {
+   "graph": 17,
+   "ops": 107,
+   "starts_at": "boltz/model/modules/confidencev2.py:286 (forward)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:123 (compute_aggregated_metric)"
+  },
+  {
+   "graph": 18,
+   "ops": 16,
+   "starts_at": "boltz/model/layers/confidence_utils.py:8 (compute_collinear_mask)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:15 (compute_collinear_mask)"
+  },
+  {
+   "graph": 19,
+   "ops": 97,
+   "starts_at": "boltz/model/layers/confidence_utils.py:141 (torch_dynamo_resume_in_compute_ptms_at_137)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:218 (torch_dynamo_resume_in_compute_ptms_at_137)"
+  },
+  {
+   "graph": 20,
+   "ops": 72,
+   "starts_at": "boltz/model/layers/confidence_utils.py:217 (torch_dynamo_resume_in_compute_ptms_at_212)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:224 (torch_dynamo_resume_in_compute_ptms_at_212)"
+  }
+ ],
+ "seconds": 126.77825604192913,
+ "config": {
+  "recycling_steps": 1,
+  "sampling_steps": 3,
+  "diffusion_samples": 2,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ }
+}

@@ -1,0 +1,142 @@
+{
+ "returncode": 0,
+ "env": {
+  "gpu": "NVIDIA A10",
+  "capability": "8.6",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "triton": "3.9.0",
+  "boltz": "/usr/local/lib/python3.12/site-packages/boltz/__init__.py",
+  "fixes_commit": "99c12a6dde875cdad097d3bde487c87fbf725f97"
+ },
+ "src": {
+  "upstream": "/opt/boltz-upstream/src/boltz/__init__.py",
+  "upstream_again": "/opt/boltz-upstream/src/boltz/__init__.py",
+  "graph_fixes": "/usr/local/lib/python3.12/site-packages/boltz/__init__.py"
+ },
+ "eager_seconds": {
+  "upstream": 10.53,
+  "upstream_again": 9.86,
+  "graph_fixes": 9.81
+ },
+ "upstream_vs_upstream": {
+  "sample_atom_coords": 0.0,
+  "plddt": 0.0,
+  "pae": 0.0,
+  "pde": 0.0,
+  "ptm": 0.0,
+  "iptm": 0.0,
+  "ligand_iptm": 0.0,
+  "protein_iptm": 0.0,
+  "pair_chains_iptm": 0.0,
+  "complex_plddt": 0.0,
+  "complex_iplddt": 0.0,
+  "complex_pde": 0.0,
+  "complex_ipde": 0.0,
+  "pdistogram": 0.0,
+  "s": 0.0,
+  "z": 0.0
+ },
+ "upstream_vs_fixes": {
+  "sample_atom_coords": 0.0,
+  "plddt": 0.0,
+  "pae": 0.0,
+  "pde": 0.0,
+  "ptm": 0.0,
+  "iptm": 0.0,
+  "ligand_iptm": 0.0,
+  "protein_iptm": 0.0,
+  "pair_chains_iptm": 1.1920928955078125e-07,
+  "complex_plddt": 0.0,
+  "complex_iplddt": 0.0,
+  "complex_pde": 0.0,
+  "complex_ipde": 0.0,
+  "pdistogram": 0.0,
+  "s": 0.0,
+  "z": 0.0
+ },
+ "export_full": {
+  "device": "cuda",
+  "torch": "2.15.0+cu132",
+  "batch": "reports/batch_boltz_results_prot.pt",
+  "strict": true,
+  "config": {
+   "recycling_steps": 3,
+   "sampling_steps": 200,
+   "diffusion_samples": 2,
+   "max_parallel_samples": null,
+   "write_confidence_summary": true,
+   "write_full_pae": false,
+   "write_full_pde": false
+  },
+  "needs_steering": false,
+  "eager_seconds": 9.84,
+  "export_seconds": 216.2,
+  "nodes": {
+   "top": 4051,
+   "submod_1": 83,
+   "submod_3": 22,
+   "submod_5": 22,
+   "submod_7": 22,
+   "submod_9": 12,
+   "scan_combine_graph_0": 11454,
+   "submod_11": 105,
+   "scan_combine_graph_1": 1663,
+   "submod_15": 34,
+   "submod_17": 34,
+   "submod_19": 34,
+   "submod_21": 34,
+   "submod_23": 34,
+   "submod_25": 34,
+   "submod_27": 34,
+   "submod_29": 34,
+   "submod_31": 1,
+   "submod_33": 34,
+   "submod_35": 34,
+   "submod_37": 34,
+   "submod_39": 34,
+   "submod_41": 34,
+   "submod_43": 34,
+   "submod_45": 34,
+   "submod_47": 34,
+   "submod_49": 1
+  },
+  "scans": 2,
+  "exported_seconds": 9.58,
+  "max_abs_diff": {
+   "sample_atom_coords": 0.0,
+   "pdistogram": 0.0,
+   "plddt": 0.0,
+   "pae": 0.0,
+   "pde": 0.0,
+   "ptm": 0.0,
+   "iptm": 0.0,
+   "ligand_iptm": 0.0,
+   "protein_iptm": 0.0,
+   "pair_chains_iptm": 0.0,
+   "complex_plddt": 0.0,
+   "complex_iplddt": 0.0,
+   "complex_pde": 0.0,
+   "complex_ipde": 0.0,
+   "confidence_score": 0.0
+  },
+  "values": {
+   "ptm": [
+    0.8255200386047363,
+    0.7646772861480713
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "confidence_score": [
+    0.8307947516441345,
+    0.7853860855102539
+   ],
+   "complex_plddt": [
+    0.8321133255958557,
+    0.7905632853507996
+   ]
+  }
+ }
+}

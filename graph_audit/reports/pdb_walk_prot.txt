@@ -1,0 +1,177 @@
+> graph_audit/walk.py(1)<module>()
+-> """Driver for the scripted pdb walk-through (see pdb_walk.cmds).
+(Pdb) Breakpoint 1 at ./src/boltz/model/models/boltz2.py:415
+(Pdb) ./.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but not supported on MPS now, device pinned memory won't be used.
+  super().__init__(loader)
+./.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+Deleted breakpoint 1 at ./src/boltz/model/models/boltz2.py:415
+> ./src/boltz/model/models/boltz2.py(415)forward()
+-> s_inputs = self.input_embedder(feats)
+(Pdb) '=== 1. Boltz2.forward entry: the feats dict the model receives ==='
+(Pdb) (79, 78)
+(Pdb) [('record', 'list')]
+(Pdb) {'res_type': (1, 136, 33), 'token_pad_mask': (1, 136), 'atom_pad_mask': (1, 1056), 'ref_pos': (1, 1056, 3), 'atom_to_token': (1, 1056, 136), 'msa': (1, 75, 136), 'token_bonds': (1, 136, 136, 1), 'template_restype': (1, 1, 136, 33), 'contact_conditioning': (1, 136, 136, 5), 'frames_idx': (1, 1, 136, 3)}
+(Pdb) (1, 3, 2, None, True)
+(Pdb) Breakpoint 2 at ./src/boltz/model/modules/encodersv2.py:64
+(Pdb) Deleted breakpoint 2 at ./src/boltz/model/modules/encodersv2.py:64
+> ./src/boltz/model/modules/encodersv2.py(64)forward()
+-> if self.cyclic_pos_enc and torch.any(feats["cyclic_period"] > 0):
+(Pdb) '=== 2. RelativePositionEncoder: branch on tensor data ==='
+(Pdb)   ~/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/bdb.py(627)run()
+-> exec(cmd, globals, locals)
+  <string>(1)<module>()
+  graph_audit/walk.py(20)<module>()
+-> out = run_forward(model, batch)
+  graph_audit/harness.py(120)run_forward()
+-> return model(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+  ./src/boltz/model/models/boltz2.py(425)forward()
+-> relative_position_encoding = self.rel_pos(feats)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+> ./src/boltz/model/modules/encodersv2.py(64)forward()
+-> if self.cyclic_pos_enc and torch.any(feats["cyclic_period"] > 0):
+(Pdb) (True, torch.Size([1, 136]), device(type='mps', index=0))
+(Pdb) False
+(Pdb) Breakpoint 3 at ./src/boltz/model/modules/trunkv2.py:632
+(Pdb) Deleted breakpoint 3 at ./src/boltz/model/modules/trunkv2.py:632
+> ./src/boltz/model/modules/trunkv2.py(632)forward()
+-> msa_indices = torch.randperm(msa.shape[1])[: self.num_subsampled_msa]
+(Pdb) '=== 3. MSAModule: randperm on default (CPU) device, then indexes a device tensor ==='
+(Pdb) (True, torch.Size([1, 75, 136, 33]), device(type='mps', index=0))
+(Pdb) > ./src/boltz/model/modules/trunkv2.py(633)forward()
+-> m = m[:, msa_indices]
+(Pdb) (device(type='cpu'), torch.Size([75]))
+(Pdb) Breakpoint 4 at ./src/boltz/model/modules/encodersv2.py:350
+(Pdb) Deleted breakpoint 4 at ./src/boltz/model/modules/encodersv2.py:350
+> ./src/boltz/model/modules/encodersv2.py(350)forward()
+-> to_keys = partial(
+(Pdb) '=== 4. AtomEncoder: to_keys is a functools.partial closing over a tensor ==='
+(Pdb) > ./src/boltz/model/modules/encodersv2.py(354)forward()
+-> atom_ref_pos_queries = atom_ref_pos.view(B, K, W, 1, 3)
+(Pdb) (<class 'functools.partial'>, torch.Size([66, 264]), 32, 128)
+(Pdb)   ~/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/bdb.py(627)run()
+-> exec(cmd, globals, locals)
+  <string>(1)<module>()
+  graph_audit/walk.py(20)<module>()
+-> out = run_forward(model, batch)
+  graph_audit/harness.py(120)run_forward()
+-> return model(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+  ./src/boltz/model/models/boltz2.py(517)forward()
+-> self.diffusion_conditioning(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+  ./src/boltz/model/modules/diffusion_conditioning.py(95)forward()
+-> q, c, p, to_keys = self.atom_encoder(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+> ./src/boltz/model/modules/encodersv2.py(354)forward()
+-> atom_ref_pos_queries = atom_ref_pos.view(B, K, W, 1, 3)
+(Pdb) Breakpoint 5 at ./src/boltz/model/modules/diffusionv2.py:372
+(Pdb) Deleted breakpoint 5 at ./src/boltz/model/modules/diffusionv2.py:372
+> ./src/boltz/model/modules/diffusionv2.py(372)sample()
+-> sigma_tm, sigma_t, gamma = sigma_tm.item(), sigma_t.item(), gamma.item()
+(Pdb) '=== 5. AtomDiffusion.sample: per-step schedule values are tensors, pulled to host ==='
+(Pdb) (<class 'torch.Tensor'>, device(type='mps', index=0), 0, 3, 2, 2)
+(Pdb) > ./src/boltz/model/modules/diffusionv2.py(374)sample()
+-> t_hat = sigma_tm * (1 + gamma)
+(Pdb) (<class 'float'>, 2560.000244140625, 0.800000011920929)
+(Pdb) [2]
+(Pdb) Breakpoint 6 at ./src/boltz/model/modules/diffusionv2.py:388
+(Pdb) Deleted breakpoint 6 at ./src/boltz/model/modules/diffusionv2.py:388
+> ./src/boltz/model/modules/diffusionv2.py(388)sample()
+-> atom_coords_denoised_chunk = self.preconditioned_network_forward(
+(Pdb) '=== 6. score model is called with a Python float sigma and a dict holding the partial ==='
+(Pdb) (<class 'float'>, 4608.000469970706)
+(Pdb) {'q': ('Tensor', (1, 1056, 128)), 'c': ('Tensor', (1, 1056, 128)), 'to_keys': ('partial', None), 'atom_enc_bias': ('Tensor', (1, 33, 32, 128, 12)), 'atom_dec_bias': ('Tensor', (1, 33, 32, 128, 12)), 'token_trans_bias': ('Tensor', (1, 136, 136, 384))}
+(Pdb) ['diffusion_conditioning', 'feats', 's_inputs', 's_trunk']
+(Pdb) Breakpoint 7 at ./src/boltz/model/loss/diffusionv2.py:34
+(Pdb) Deleted breakpoint 7 at ./src/boltz/model/loss/diffusionv2.py:34
+> ./src/boltz/model/loss/diffusionv2.py(34)weighted_rigid_align()
+-> if torch.any(mask.sum(dim=-1) < (dim + 1)):
+(Pdb) '=== 7. weighted_rigid_align (every step): two data-dependent warning branches ==='
+(Pdb)   ~/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/bdb.py(627)run()
+-> exec(cmd, globals, locals)
+  <string>(1)<module>()
+  graph_audit/walk.py(20)<module>()
+-> out = run_forward(model, batch)
+  graph_audit/harness.py(120)run_forward()
+-> return model(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+  ./src/boltz/model/models/boltz2.py(534)forward()
+-> struct_out = self.structure_module.sample(
+  ./src/boltz/model/modules/diffusionv2.py(514)sample()
+-> atom_coords_noisy = weighted_rigid_align(
+> ./src/boltz/model/loss/diffusionv2.py(34)weighted_rigid_align()
+-> if torch.any(mask.sum(dim=-1) < (dim + 1)):
+(Pdb) tensor([1036., 1036.], device='mps:0')
+(Pdb) Breakpoint 8 at ./src/boltz/model/modules/confidencev2.py:121
+(Pdb) Deleted breakpoint 8 at ./src/boltz/model/modules/confidencev2.py:121
+> ./src/boltz/model/modules/confidencev2.py(121)forward()
+-> if run_sequentially and multiplicity > 1:
+(Pdb) '=== 8. ConfidenceModule: Python loop over samples + recursive forward ==='
+(Pdb) (True, 2, torch.Size([2, 1056, 3]))
+(Pdb) Breakpoint 9 at ./src/boltz/model/layers/confidence_utils.py:44
+(Pdb) Deleted breakpoint 9 at ./src/boltz/model/layers/confidence_utils.py:44
+> ./src/boltz/model/layers/confidence_utils.py(44)compute_frame_pred()
+-> for id in torch.unique(asym_id_token[i]):
+(Pdb) '=== 9. compute_frame_pred: per-chain Python loop driven by torch.unique ==='
+(Pdb)   ~/.local/share/uv/python/cpython-3.12-macos-aarch64-none/lib/python3.12/bdb.py(627)run()
+-> exec(cmd, globals, locals)
+  <string>(1)<module>()
+  graph_audit/walk.py(20)<module>()
+-> out = run_forward(model, batch)
+  graph_audit/harness.py(120)run_forward()
+-> return model(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+  ./src/boltz/model/models/boltz2.py(588)forward()
+-> self.confidence_module(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+  ./src/boltz/model/modules/confidencev2.py(126)forward()
+-> self.forward(
+  ./src/boltz/model/modules/confidencev2.py(221)forward()
+-> self.confidence_heads(
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1787)_wrapped_call_impl()
+-> return self._call_impl(*args, **kwargs)
+  ./.venv/lib/python3.12/site-packages/torch/nn/modules/module.py(1798)_call_impl()
+-> return forward_call(*args, **kwargs)
+  ./src/boltz/model/modules/confidencev2.py(481)forward()
+-> ptm, iptm, ligand_iptm, protein_iptm, pair_chains_iptm = compute_ptms(
+  ./src/boltz/model/layers/confidence_utils.py(137)compute_ptms()
+-> _, mask_collinear_pred = compute_frame_pred(
+> ./src/boltz/model/layers/confidence_utils.py(44)compute_frame_pred()
+-> for id in torch.unique(asym_id_token[i]):
+(Pdb) (tensor([0], device='mps:0'), tensor([0, 0, 0, 0, 0], device='mps:0'))
+(Pdb) Breakpoint 10 at ./src/boltz/model/layers/confidence_utils.py:212
+(Pdb) Deleted breakpoint 10 at ./src/boltz/model/layers/confidence_utils.py:212
+> ./src/boltz/model/layers/confidence_utils.py(212)compute_ptms()
+-> asym_ids_list = torch.unique(asym_id).tolist()
+(Pdb) '=== 10. compute_ptms: chain-pair ipTM dict keyed by tensor values ==='
+(Pdb) [0]
+(Pdb) OUTPUT KEYS: ['complex_ipde', 'complex_iplddt', 'complex_pde', 'complex_plddt', 'diff_token_repr', 'iptm', 'ligand_iptm', 'pae', 'pae_logits', 'pair_chains_iptm', 'pbfactor', 'pde', 'pde_logits', 'pdistogram', 'plddt', 'plddt_logits', 'protein_iptm', 'ptm', 'resolved_logits', 's', 'sample_atom_coords', 'z']
+The program finished and will be restarted
+> graph_audit/walk.py(1)<module>()
+-> """Driver for the scripted pdb walk-through (see pdb_walk.cmds).
+(Pdb) 

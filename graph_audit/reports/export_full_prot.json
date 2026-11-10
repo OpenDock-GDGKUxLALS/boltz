@@ -1,0 +1,82 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "batch": "reports/batch_boltz_results_prot.pt",
+ "strict": true,
+ "config": {
+  "recycling_steps": 3,
+  "sampling_steps": 200,
+  "diffusion_samples": 2,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "needs_steering": false,
+ "eager_seconds": 9.83,
+ "export_seconds": 92.7,
+ "nodes": {
+  "top": 4053,
+  "submod_1": 83,
+  "submod_3": 22,
+  "submod_5": 22,
+  "submod_7": 22,
+  "submod_9": 12,
+  "scan_combine_graph_0": 11453,
+  "submod_11": 105,
+  "scan_combine_graph_1": 1661,
+  "submod_15": 34,
+  "submod_17": 34,
+  "submod_19": 34,
+  "submod_21": 34,
+  "submod_23": 34,
+  "submod_25": 34,
+  "submod_27": 34,
+  "submod_29": 34,
+  "submod_31": 34,
+  "submod_33": 34,
+  "submod_35": 34,
+  "submod_37": 34,
+  "submod_39": 34,
+  "submod_41": 34,
+  "submod_43": 34,
+  "submod_45": 34
+ },
+ "scans": 2,
+ "exported_seconds": 9.64,
+ "max_abs_diff": {
+  "sample_atom_coords": 0.0,
+  "pdistogram": 0.0,
+  "plddt": 0.0,
+  "pae": 0.0,
+  "pde": 0.0,
+  "ptm": 0.0,
+  "iptm": 0.0,
+  "ligand_iptm": 0.0,
+  "protein_iptm": 0.0,
+  "pair_chains_iptm": 0.0,
+  "complex_plddt": 0.0,
+  "complex_iplddt": 0.0,
+  "complex_pde": 0.0,
+  "complex_ipde": 0.0,
+  "confidence_score": 0.0
+ },
+ "values": {
+  "ptm": [
+   0.8552403450012207,
+   0.8048633337020874
+  ],
+  "iptm": [
+   0.0,
+   0.0
+  ],
+  "confidence_score": [
+   0.8213146328926086,
+   0.8714011311531067
+  ],
+  "complex_plddt": [
+   0.8128332495689392,
+   0.8880355954170227
+  ]
+ }
+}

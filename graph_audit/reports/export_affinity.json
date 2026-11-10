@@ -1,0 +1,199 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "affinity_config": {
+  "recycling_steps": 5,
+  "sampling_steps": 200,
+  "diffusion_samples": 3,
+  "max_parallel_samples": 1,
+  "write_confidence_summary": false,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "link_vs_cli": {
+  "affinity_pred_value": 0.0,
+  "affinity_probability_binary": 0.0,
+  "sample_atom_coords": 0.0,
+  "z": 0.0,
+  "iptm": 0.0
+ },
+ "padding": {
+  "affinity_pred_value": [
+   [
+    2.283137798309326
+   ],
+   [
+    2.221160888671875
+   ]
+  ],
+  "affinity_probability_binary": [
+   [
+    0.35622143745422363
+   ],
+   [
+    0.34657084941864014
+   ]
+  ],
+  "affinity_pred_value1": [
+   [
+    2.597545623779297
+   ],
+   [
+    2.504100799560547
+   ]
+  ],
+  "affinity_probability_binary1": [
+   [
+    0.29340609908103943
+   ],
+   [
+    0.2738371789455414
+   ]
+  ],
+  "affinity_pred_value2": [
+   [
+    1.9687302112579346
+   ],
+   [
+    1.9382210969924927
+   ]
+  ],
+  "affinity_probability_binary2": [
+   [
+    0.41903674602508545
+   ],
+   [
+    0.4193045198917389
+   ]
+  ],
+  "z_real_max_abs_diff": 0.0
+ },
+ "structure_config": {
+  "recycling_steps": 3,
+  "sampling_steps": 200,
+  "diffusion_samples": 2,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "eager_seconds": 217.4,
+ "export_seconds": 297.6,
+ "nodes": {
+  "top": 13234,
+  "submod_1": 83,
+  "submod_3": 22,
+  "submod_5": 22,
+  "submod_7": 22,
+  "submod_9": 12,
+  "scan_combine_graph_0": 24825,
+  "submod_11": 105,
+  "scan_combine_graph_1": 1661,
+  "submod_15": 34,
+  "submod_17": 34,
+  "submod_19": 34,
+  "submod_21": 34,
+  "submod_23": 34,
+  "submod_25": 34,
+  "submod_27": 34,
+  "submod_29": 34,
+  "submod_31": 34,
+  "submod_33": 34,
+  "submod_35": 34,
+  "submod_37": 34,
+  "submod_39": 34,
+  "submod_41": 34,
+  "submod_43": 34,
+  "submod_45": 34,
+  "submod_47": 83,
+  "submod_49": 22,
+  "submod_51": 22,
+  "submod_53": 22,
+  "submod_55": 12,
+  "scan_combine_graph_2": 11099,
+  "submod_57": 105,
+  "scan_combine_graph_3": 1661,
+  "submod_61": 34,
+  "submod_63": 34,
+  "submod_65": 34,
+  "submod_67": 34,
+  "submod_69": 34,
+  "submod_71": 34,
+  "submod_73": 34,
+  "submod_75": 34,
+  "submod_77": 34,
+  "submod_79": 34,
+  "submod_81": 34,
+  "submod_83": 34,
+  "submod_85": 34,
+  "submod_87": 34,
+  "submod_89": 34,
+  "submod_91": 34,
+  "submod_93": 34,
+  "submod_95": 34,
+  "submod_97": 34,
+  "submod_99": 34,
+  "submod_101": 34,
+  "submod_103": 34,
+  "submod_105": 34,
+  "submod_107": 34,
+  "submod_109": 83,
+  "submod_111": 22,
+  "submod_113": 22,
+  "submod_115": 22,
+  "submod_117": 12,
+  "submod_119": 2170
+ },
+ "exported_seconds": 148.3,
+ "export_max_abs_diff": {
+  "sample_atom_coords": 0.0,
+  "pdistogram": 0.0,
+  "plddt": 0.0,
+  "pae": 0.0,
+  "pde": 0.0,
+  "ptm": 0.0,
+  "iptm": 0.0,
+  "ligand_iptm": 0.0,
+  "protein_iptm": 0.0,
+  "pair_chains_iptm": 0.0,
+  "complex_plddt": 0.0,
+  "complex_iplddt": 0.0,
+  "complex_pde": 0.0,
+  "complex_ipde": 0.0,
+  "confidence_score": 0.0,
+  "affinity_pred_value": 0.0,
+  "affinity_probability_binary": 0.0,
+  "affinity_pred_value1": 0.0,
+  "affinity_probability_binary1": 0.0,
+  "affinity_pred_value2": 0.0,
+  "affinity_probability_binary2": 0.0
+ },
+ "values": {
+  "affinity_pred_value": [
+   2.1040472984313965
+  ],
+  "affinity_probability_binary": [
+   0.3434068560600281
+  ],
+  "affinity_pred_value1": [
+   2.3944759368896484
+  ],
+  "affinity_probability_binary1": [
+   0.29055291414260864
+  ],
+  "affinity_pred_value2": [
+   1.8136186599731445
+  ],
+  "affinity_probability_binary2": [
+   0.3962608277797699
+  ],
+  "confidence_score": [
+   0.9129805564880371,
+   0.9089206457138062
+  ],
+  "iptm": [
+   0.8888190984725952,
+   0.8726957440376282
+  ]
+ }
+}

@@ -1,0 +1,71 @@
++./scratch/run_compare2.sh:7> PYTHONPATH=graph_audit/wt-fixes/src python compare.py save --run runs/cli_prot/boltz_results_prot --samples 2 --out reports/v2_prot_fixed.pt
+./.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+saved reports/v2_prot_fixed.pt from graph_audit/wt-fixes/src/boltz/__init__.py in 25.6 s
++./scratch/run_compare2.sh:8> PYTHONPATH=graph_audit/wt-fixes/src python compare.py save --run runs/cli_aff/boltz_results_affinity --samples 2 --out reports/v2_ligstruct_fixed.pt
+./.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+saved reports/v2_ligstruct_fixed.pt from graph_audit/wt-fixes/src/boltz/__init__.py in 141.4 s
++./scratch/run_compare2.sh:9> python compare.py save --run runs/cli_aff/boltz_results_affinity --affinity --out reports/v2_aff_orig.pt
+./.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+saved reports/v2_aff_orig.pt from ./src/boltz/__init__.py in 59.4 s
++./scratch/run_compare2.sh:10> PYTHONPATH=graph_audit/wt-fixes/src python compare.py save --run runs/cli_aff/boltz_results_affinity --affinity --out reports/v2_aff_fixed.pt
+./.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/migration/utils.py:56: The loaded checkpoint was produced with Lightning v2.5.0.post0, which is newer than your current Lightning version: v2.5.0
+saved reports/v2_aff_fixed.pt from graph_audit/wt-fixes/src/boltz/__init__.py in 65.9 s
++./scratch/run_compare2.sh:11> python compare.py diff reports/v2_prot_orig.pt reports/v2_prot_fixed.pt
+A: ./src/boltz/__init__.py 9.4 s
+B: graph_audit/wt-fixes/src/boltz/__init__.py 25.6 s
+  sample_atom_coords           shape=(2, 1056, 3)           max|d|=0.000e+00  mean|d|=0.000e+00  RMSD=0.0000 A
+  plddt                        shape=(2, 136)               max|d|=0.000e+00  mean|d|=0.000e+00
+  pae                          shape=(2, 136, 136)          max|d|=0.000e+00  mean|d|=0.000e+00
+  pde                          shape=(2, 136, 136)          max|d|=0.000e+00  mean|d|=0.000e+00
+  ptm                          shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  iptm                         shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  ligand_iptm                  shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  protein_iptm                 shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pair_chains_iptm             shape=(2, 1, 1)              max|d|=1.788e-07  mean|d|=8.941e-08
+  complex_plddt                shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_iplddt               shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_pde                  shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_ipde                 shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pdistogram                   shape=(1, 136, 136, 1, 64)   max|d|=0.000e+00  mean|d|=0.000e+00
+  s                            shape=(1, 136, 384)          max|d|=0.000e+00  mean|d|=0.000e+00
+  z                            shape=(1, 136, 136, 128)     max|d|=0.000e+00  mean|d|=0.000e+00
++./scratch/run_compare2.sh:12> python compare.py diff reports/v2_ligstruct_orig.pt reports/v2_ligstruct_fixed.pt
+A: ./src/boltz/__init__.py 151.4 s
+B: graph_audit/wt-fixes/src/boltz/__init__.py 141.4 s
+  sample_atom_coords           shape=(2, 2976, 3)           max|d|=0.000e+00  mean|d|=0.000e+00  RMSD=0.0000 A
+  plddt                        shape=(2, 397)               max|d|=0.000e+00  mean|d|=0.000e+00
+  pae                          shape=(2, 397, 397)          max|d|=0.000e+00  mean|d|=0.000e+00
+  pde                          shape=(2, 397, 397)          max|d|=0.000e+00  mean|d|=0.000e+00
+  ptm                          shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  iptm                         shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  ligand_iptm                  shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  protein_iptm                 shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pair_chains_iptm             shape=(2, 2, 2)              max|d|=2.384e-07  mean|d|=6.706e-08
+  complex_plddt                shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_iplddt               shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_pde                  shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_ipde                 shape=(2,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pdistogram                   shape=(1, 397, 397, 1, 64)   max|d|=0.000e+00  mean|d|=0.000e+00
+  s                            shape=(1, 397, 384)          max|d|=0.000e+00  mean|d|=0.000e+00
+  z                            shape=(1, 397, 397, 128)     max|d|=0.000e+00  mean|d|=0.000e+00
++./scratch/run_compare2.sh:13> python compare.py diff reports/v2_aff_orig.pt reports/v2_aff_fixed.pt
+A: ./src/boltz/__init__.py 59.4 s
+B: graph_audit/wt-fixes/src/boltz/__init__.py 65.9 s
+  sample_atom_coords           shape=(3, 1536, 3)           max|d|=0.000e+00  mean|d|=0.000e+00  RMSD=0.0000 A
+  plddt                        shape=(3, 211)               max|d|=0.000e+00  mean|d|=0.000e+00
+  pae                          shape=(3, 211, 211)          max|d|=0.000e+00  mean|d|=0.000e+00
+  pde                          shape=(3, 211, 211)          max|d|=0.000e+00  mean|d|=0.000e+00
+  ptm                          shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  iptm                         shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  ligand_iptm                  shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  protein_iptm                 shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pair_chains_iptm             shape=(3, 2, 2)              max|d|=2.384e-07  mean|d|=5.464e-08
+  complex_plddt                shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_iplddt               shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_pde                  shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  complex_ipde                 shape=(3,)                   max|d|=0.000e+00  mean|d|=0.000e+00
+  pdistogram                   shape=(1, 211, 211, 1, 64)   max|d|=0.000e+00  mean|d|=0.000e+00
+  s                            shape=(1, 211, 384)          max|d|=0.000e+00  mean|d|=0.000e+00
+  z                            shape=(1, 211, 211, 128)     max|d|=0.000e+00  mean|d|=0.000e+00
+  affinity_pred_value          shape=(1, 1)                 max|d|=0.000e+00  mean|d|=0.000e+00
+  affinity_probability_binary  shape=(1, 1)                 max|d|=0.000e+00  mean|d|=0.000e+00

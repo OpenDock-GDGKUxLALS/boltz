@@ -1,0 +1,87 @@
+batch: {'res_type': (1, 136, 33), 'msa': (1, 75, 136), 'ref_pos': (1, 1056, 3), 'atom_to_token': (1, 1056, 136)}
+
+[input_embedder.atom_encoder]
+   in : feats=feats<78 tensors>
+   out: ((1, 1056, 128) float32, (1, 1056, 128) float32, (1, 33, 32, 128, 16) float32, partial(single_to_keys, indexing_matrix=(66, 264)))
+
+[input_embedder.atom_attention_encoder]
+   in : feats=feats<78 tensors>, q=(1, 1056, 128) float32, c=(1, 1056, 128) float32, atom_enc_bias=(1, 33, 32, 128, 12) float32, to_keys=partial(single_to_keys, indexing_matrix=(66, 264))
+   out: ((1, 136, 384) float32, (1, 1056, 128) float32, (1, 1056, 128) float32, partial(single_to_keys, indexing_matrix=(66, 264)))
+
+[input_embedder]
+   in : feats=feats<78 tensors>
+   out: (1, 136, 384) float32
+
+[rel_pos]
+   in : feats=feats<78 tensors>
+   out: (1, 136, 136, 128) float32
+
+[contact_conditioning]
+   in : feats=feats<78 tensors>
+   out: (1, 136, 136, 128) float32
+
+[template_module]
+   in : z=(1, 136, 136, 128) float32, feats=feats<78 tensors>, pair_mask=(1, 136, 136) float32
+   out: (1, 136, 136, 128) float32
+
+[msa_module]
+   in : z=(1, 136, 136, 128) float32, emb=(1, 136, 384) float32, feats=feats<78 tensors>
+   out: (1, 136, 136, 128) float32
+
+[pairformer_module]
+   in : s=(1, 136, 384) float32, z=(1, 136, 136, 128) float32, mask=(1, 136) float32, pair_mask=(1, 136, 136) float32
+   out: ((1, 136, 384) float32, (1, 136, 136, 128) float32)
+
+[distogram_module]
+   in : z=(1, 136, 136, 128) float32
+   out: (1, 136, 136, 1, 64) float32
+
+[diffusion_conditioning.pairwise_conditioner]
+   in : z_trunk=(1, 136, 136, 128) float32, token_rel_pos_feats=(1, 136, 136, 128) float32
+   out: (1, 136, 136, 128) float32
+
+[diffusion_conditioning.atom_encoder]
+   in : feats=feats<78 tensors>, s_trunk=(1, 136, 384) float32, z=(1, 136, 136, 128) float32
+   out: ((1, 1056, 128) float32, (1, 1056, 128) float32, (1, 33, 32, 128, 16) float32, partial(single_to_keys, indexing_matrix=(66, 264)))
+
+[diffusion_conditioning]
+   in : s_trunk=(1, 136, 384) float32, z_trunk=(1, 136, 136, 128) float32, relative_position_encoding=(1, 136, 136, 128) float32, feats=feats<78 tensors>
+   out: ((1, 1056, 128) float32, (1, 1056, 128) float32, partial(single_to_keys, indexing_matrix=(66, 264)), (1, 33, 32, 128, 12) float32, (1, 33, 32, 128, 12) float32, (1, 136, 136, 384) float32)
+
+[structure_module.score_model.single_conditioner]
+   in : times=(2,) float32, s_trunk=(2, 136, 384) float32, s_inputs=(2, 136, 384) float32
+   out: ((2, 136, 768) float32, (2, 256) float32)
+
+[structure_module.score_model.atom_attention_encoder]
+   in : feats=feats<78 tensors>, q=(1, 1056, 128) float32, c=(1, 1056, 128) float32, atom_enc_bias=(1, 33, 32, 128, 12) float32, to_keys=partial(single_to_keys, indexing_matrix=(66, 264)), r=(2, 1056, 3) float32
+   out: ((2, 136, 768) float32, (2, 1056, 128) float32, (2, 1056, 128) float32, partial(single_to_keys, indexing_matrix=(66, 264)))
+
+[structure_module.score_model.token_transformer]
+   in : a=(2, 136, 768) float32, mask=(2, 136) float32, s=(2, 136, 768) float32, bias=(1, 136, 136, 384) float32
+   out: (2, 136, 768) float32
+
+[structure_module.score_model.atom_attention_decoder]
+   in : a=(2, 136, 768) float32, q=(2, 1056, 128) float32, c=(2, 1056, 128) float32, atom_dec_bias=(1, 33, 32, 128, 12) float32, feats=feats<78 tensors>, to_keys=partial(single_to_keys, indexing_matrix=(66, 264))
+   out: (2, 1056, 3) float32
+
+[structure_module.score_model]
+   in : r_noisy=(2, 1056, 3) float32, times=(2,) float32, s_trunk=(1, 136, 384) float32, s_inputs=(1, 136, 384) float32, feats=feats<78 tensors>, diffusion_conditioning={q: (1, 1056, 128) float32, c: (1, 1056, 128) float32, to_keys: partial(single_to_keys, indexing_matrix=(66, 264)), atom_enc_bias: (1, 33, 32, 128, 12) float32, atom_dec_bias: (1, 33, 32, 128, 12) float32, token_trans_bias: (1, 136, 136, 384) float32}
+   out: (2, 1056, 3) float32
+
+[bfactor_module]
+   in : s=(1, 136, 384) float32
+   out: (1, 136, 64) float32
+
+[confidence_module.pairformer_stack]
+   in : s=(1, 136, 384) float32, z=(1, 136, 136, 128) float32, mask=(1, 136) float32, pair_mask=(1, 136, 136) float32
+   out: ((1, 136, 384) float32, (1, 136, 136, 128) float32)
+
+[confidence_module.confidence_heads]
+   in : s=(1, 136, 384) float32, z=(1, 136, 136, 128) float32, x_pred=(1, 1056, 3) float32, d=(1, 136, 136) float32, feats=feats<78 tensors>, pred_distogram_logits=(1, 136, 136, 64) float32
+   out: {pde_logits: (1, 136, 136, 64) float32, plddt_logits: (1, 136, 50) float32, resolved_logits: (1, 136, 2) float32, pde: (1, 136, 136) float32, plddt: (1, 136) float32, complex_plddt: (1,) float32, complex_iplddt: (1,) float32, complex_pde: (1,) float32, complex_ipde: (1,) float32, pae_logits: (1, 136, 136, 64) float32, pae: (1, 136, 136) float32, ptm: (1,) float32, iptm: (1,) float32, ligand_iptm: (1,) float32, protein_iptm: (1,) float32, pair_chains_iptm: {...}}
+
+[confidence_module]
+   in : s_inputs=(1, 136, 384) float32, s=(1, 136, 384) float32, z=(1, 136, 136, 128) float32, x_pred=(2, 1056, 3) float32, feats=feats<78 tensors>, pred_distogram_logits=(1, 136, 136, 64) float32
+   out: {pde_logits: (2, 136, 136, 64) float32, plddt_logits: (2, 136, 50) float32, resolved_logits: (2, 136, 2) float32, pde: (2, 136, 136) float32, plddt: (2, 136) float32, complex_plddt: (2,) float32, complex_iplddt: (2,) float32, complex_pde: (2,) float32, complex_ipde: (2,) float32, pae_logits: (2, 136, 136, 64) float32, pae: (2, 136, 136) float32, ptm: (2,) float32, iptm: (2,) float32, ligand_iptm: (2,) float32, protein_iptm: (2,) float32, pair_chains_iptm: {...}}
+
+[Boltz2.forward] out: {pdistogram: (1, 136, 136, 1, 64) float32, s: (1, 136, 384) float32, z: (1, 136, 136, 128) float32, sample_atom_coords: (2, 1056, 3) float32, pbfactor: (1, 136, 64) float32, pde_logits: (2, 136, 136, 64) float32, plddt_logits: (2, 136, 50) float32, resolved_logits: (2, 136, 2) float32, pde: (2, 136, 136) float32, plddt: (2, 136) float32, complex_plddt: (2,) float32, complex_iplddt: (2,) float32, complex_pde: (2,) float32, complex_ipde: (2,) float32, pae_logits: (2, 136, 136, 64) float32, pae: (2, 136, 136) float32, ptm: (2,) float32, iptm: (2,) float32, ligand_iptm: (2,) float32, protein_iptm: (2,) float32}

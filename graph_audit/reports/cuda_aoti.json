@@ -1,0 +1,95 @@
+{
+ "returncode": 0,
+ "env": {
+  "gpu": "NVIDIA L40S",
+  "capability": "8.9",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "triton": "3.9.0",
+  "boltz": "/usr/local/lib/python3.12/site-packages/boltz/__init__.py",
+  "fixes_commit": "74e4526f39cb66894d6f6e86d8921963d1df60c4"
+ },
+ "eager_rng": false,
+ "eager_s": 10.469,
+ "export_s": 251.9,
+ "export_save": "AssertionError: symbol '_enter_autocast_6' not in def_table or graph_inputs",
+ "compile_s": 1187.9,
+ "package_gb": 2.07,
+ "load_s": 2.7,
+ "first_run_s": 3.221,
+ "second_run_s": 3.185,
+ "vs_eager": {
+  "sample_atom_coords": 38.14544677734375,
+  "pdistogram": 8.392333984375e-05,
+  "plddt": 0.18708676099777222,
+  "pae": 7.32327938079834,
+  "pde": 5.77164363861084,
+  "ptm": 0.01904928684234619,
+  "iptm": 0.0,
+  "ligand_iptm": 0.0,
+  "protein_iptm": 0.0,
+  "pair_chains_iptm": 0.01904928684234619,
+  "complex_plddt": 0.014058709144592285,
+  "complex_iplddt": 0.014058709144592285,
+  "complex_pde": 0.08326798677444458,
+  "complex_ipde": 0.0,
+  "confidence_score": 0.015056908130645752,
+  "coords_rmsd": 18.98623275756836
+ },
+ "repeat": {
+  "sample_atom_coords": 0.0,
+  "pdistogram": 0.0,
+  "plddt": 0.0,
+  "pae": 0.0,
+  "pde": 0.0,
+  "ptm": 0.0,
+  "iptm": 0.0,
+  "ligand_iptm": 0.0,
+  "protein_iptm": 0.0,
+  "pair_chains_iptm": 0.0,
+  "complex_plddt": 0.0,
+  "complex_iplddt": 0.0,
+  "complex_pde": 0.0,
+  "complex_ipde": 0.0,
+  "confidence_score": 0.0,
+  "coords_rmsd": 0.0
+ },
+ "scores": {
+  "eager": {
+   "ptm": [
+    0.8255,
+    0.7647
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8321,
+    0.7906
+   ],
+   "confidence_score": [
+    0.8308,
+    0.7854
+   ]
+  },
+  "aoti": {
+   "ptm": [
+    0.8065,
+    0.7468
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8181,
+    0.7906
+   ],
+   "confidence_score": [
+    0.8157,
+    0.7818
+   ]
+  }
+ }
+}

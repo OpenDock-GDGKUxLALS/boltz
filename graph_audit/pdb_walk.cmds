@@ -1,0 +1,60 @@
+# Breakpoints are at upstream b1ebfc4 line numbers: run against an upstream checkout.
+# Usage, from graph_audit/: python -m pdb walk.py <run_dir> < pdb_walk.cmds
+tbreak ../src/boltz/model/models/boltz2.py:415
+c
+p "=== 1. Boltz2.forward entry: the feats dict the model receives ==="
+p len(feats), sum(isinstance(v, torch.Tensor) for v in feats.values())
+p [(k, type(v).__name__) for k, v in feats.items() if not isinstance(v, torch.Tensor)]
+p {k: tuple(feats[k].shape) for k in ["res_type", "token_pad_mask", "atom_pad_mask", "ref_pos", "atom_to_token", "msa", "token_bonds", "template_restype", "contact_conditioning", "frames_idx"]}
+p recycling_steps, num_sampling_steps, diffusion_samples, max_parallel_samples, run_confidence_sequentially
+tbreak ../src/boltz/model/modules/encodersv2.py:64
+c
+p "=== 2. RelativePositionEncoder: branch on tensor data ==="
+where
+p self.cyclic_pos_enc, feats["cyclic_period"].shape, feats["cyclic_period"].device
+p bool(torch.any(feats["cyclic_period"] > 0))
+tbreak ../src/boltz/model/modules/trunkv2.py:632
+c
+p "=== 3. MSAModule: randperm on default (CPU) device, then indexes a device tensor ==="
+p self.subsample_msa, msa.shape, msa.device
+n
+p msa_indices.device, msa_indices.shape
+tbreak ../src/boltz/model/modules/encodersv2.py:350
+c
+p "=== 4. AtomEncoder: to_keys is a functools.partial closing over a tensor ==="
+until 354
+p type(to_keys), to_keys.keywords["indexing_matrix"].shape, to_keys.keywords["W"], to_keys.keywords["H"]
+where
+tbreak ../src/boltz/model/modules/diffusionv2.py:372
+c
+p "=== 5. AtomDiffusion.sample: per-step schedule values are tensors, pulled to host ==="
+p type(sigma_tm), sigma_tm.device, step_idx, num_sampling_steps, multiplicity, max_parallel_samples
+n
+p type(sigma_tm), sigma_tm, gamma
+p [len(c) for c in torch.arange(multiplicity).chunk(multiplicity % max_parallel_samples + 1)]
+tbreak ../src/boltz/model/modules/diffusionv2.py:388
+c
+p "=== 6. score model is called with a Python float sigma and a dict holding the partial ==="
+p type(t_hat), t_hat
+p {k: (type(v).__name__, tuple(v.shape) if hasattr(v, "shape") else None) for k, v in network_condition_kwargs["diffusion_conditioning"].items()}
+p sorted(network_condition_kwargs)
+tbreak ../src/boltz/model/loss/diffusionv2.py:34
+c
+p "=== 7. weighted_rigid_align (every step): two data-dependent warning branches ==="
+where
+p mask.sum(dim=-1)
+tbreak ../src/boltz/model/modules/confidencev2.py:121
+c
+p "=== 8. ConfidenceModule: Python loop over samples + recursive forward ==="
+p run_sequentially, multiplicity, x_pred.shape
+tbreak ../src/boltz/model/layers/confidence_utils.py:44
+c
+p "=== 9. compute_frame_pred: per-chain Python loop driven by torch.unique ==="
+where
+p torch.unique(asym_id_token[i]), feats["mol_type"][i, :5]
+tbreak ../src/boltz/model/layers/confidence_utils.py:212
+c
+p "=== 10. compute_ptms: chain-pair ipTM dict keyed by tensor values ==="
+p torch.unique(asym_id).tolist()
+c
+q

@@ -1,0 +1,112 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "config": {
+  "recycling_steps": 3,
+  "sampling_steps": 200,
+  "diffusion_samples": 1,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "runs": [
+  {
+   "run": 0,
+   "seconds": 125.88052816700656,
+   "graphs_compiled_so_far": 11,
+   "launches_this_run": 210,
+   "launches_by_graph": {
+    "0": 1,
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 200,
+    "5": 1,
+    "6": 1,
+    "7": 1,
+    "8": 1,
+    "9": 1,
+    "10": 1
+   }
+  },
+  {
+   "run": 1,
+   "seconds": 22.650706707965583,
+   "graphs_compiled_so_far": 11,
+   "launches_this_run": 210,
+   "launches_by_graph": {
+    "0": 1,
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 200,
+    "5": 1,
+    "6": 1,
+    "7": 1,
+    "8": 1,
+    "9": 1,
+    "10": 1
+   }
+  }
+ ],
+ "eager_seconds": 9.241919290972874,
+ "graphs": [
+  {
+   "idx": 0,
+   "ops": 58103,
+   "first_op_at": "File \"boltz/model/models/boltz2.py\", line 415, in forward"
+  },
+  {
+   "idx": 1,
+   "ops": 6,
+   "first_op_at": "File \"boltz/model/potentials/potentials.py\", line 655, in compute_args"
+  },
+  {
+   "idx": 2,
+   "ops": 1,
+   "first_op_at": "File \"boltz/model/potentials/potentials.py\", line 602, in compute_args"
+  },
+  {
+   "idx": 3,
+   "ops": 7,
+   "first_op_at": "File \"boltz/model/modules/diffusionv2.py\", line 290, in sample_schedule"
+  },
+  {
+   "idx": 4,
+   "ops": 2158,
+   "first_op_at": "File \"boltz/model/modules/diffusionv2.py\", line 314, in denoise_step"
+  },
+  {
+   "idx": 5,
+   "ops": 9,
+   "first_op_at": "File \"boltz/model/models/boltz2.py\", line 548, in torch_dynamo_resume_in_forward_at_534"
+  },
+  {
+   "idx": 6,
+   "ops": 1764,
+   "first_op_at": "File \"boltz/model/modules/confidencev2.py\", line 156, in forward"
+  },
+  {
+   "idx": 7,
+   "ops": 107,
+   "first_op_at": "File \"boltz/model/modules/confidencev2.py\", line 286, in forward"
+  },
+  {
+   "idx": 8,
+   "ops": 16,
+   "first_op_at": "File \"boltz/model/layers/confidence_utils.py\", line 8, in compute_collinear_mask"
+  },
+  {
+   "idx": 9,
+   "ops": 97,
+   "first_op_at": "File \"boltz/model/layers/confidence_utils.py\", line 141, in torch_dynamo_resume_in_compute_ptms_at_137"
+  },
+  {
+   "idx": 10,
+   "ops": 18,
+   "first_op_at": "File \"boltz/model/layers/confidence_utils.py\", line 217, in torch_dynamo_resume_in_compute_ptms_at_212"
+  }
+ ],
+ "recompile_log": []
+}

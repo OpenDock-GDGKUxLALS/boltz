@@ -1,0 +1,182 @@
+{
+ "returncode": 0,
+ "env": {
+  "gpu": "NVIDIA L40S",
+  "capability": "8.9",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "triton": "3.9.0",
+  "boltz": "/usr/local/lib/python3.12/site-packages/boltz/__init__.py",
+  "fixes_commit": "74e4526f39cb66894d6f6e86d8921963d1df60c4"
+ },
+ "runs": 3,
+ "config": "136 tokens, 3 recycles, 200 steps, 2 samples",
+ "eager fp32": {
+  "first_s": 5.642,
+  "median_s": 4.908,
+  "runs_s": [
+   4.867,
+   4.908,
+   4.931
+  ],
+  "work_gb": 0.27,
+  "scores": {
+   "ptm": [
+    0.8255,
+    0.7647
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8321,
+    0.7906
+   ],
+   "confidence_score": [
+    0.8308,
+    0.7854
+   ]
+  }
+ },
+ "eager fp32, TF32 matmuls": {
+  "first_s": 4.655,
+  "median_s": 4.7,
+  "runs_s": [
+   4.694,
+   4.7,
+   4.71
+  ],
+  "work_gb": 0.26,
+  "scores": {
+   "ptm": [
+    0.8139,
+    0.7664
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8246,
+    0.7896
+   ],
+   "confidence_score": [
+    0.8225,
+    0.785
+   ]
+  }
+ },
+ "eager bf16-mixed": {
+  "first_s": 4.812,
+  "median_s": 4.743,
+  "runs_s": [
+   4.743,
+   4.789,
+   4.72
+  ],
+  "work_gb": 0.19,
+  "scores": {
+   "ptm": [
+    0.8395,
+    0.7663
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8412,
+    0.7904
+   ],
+   "confidence_score": [
+    0.8409,
+    0.7856
+   ]
+  }
+ },
+ "eager bf16-mixed + cuEquivariance (boltz predict)": {
+  "first_s": 10.341,
+  "median_s": 4.948,
+  "runs_s": [
+   4.942,
+   5.168,
+   4.948
+  ],
+  "work_gb": 0.19,
+  "scores": {
+   "ptm": [
+    0.8021,
+    0.7579
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8209,
+    0.7877
+   ],
+   "confidence_score": [
+    0.8172,
+    0.7818
+   ]
+  }
+ },
+ "AOTInductor fp32": {
+  "first_s": 3.223,
+  "median_s": 3.185,
+  "runs_s": [
+   3.194,
+   3.183,
+   3.185
+  ],
+  "work_gb": 0.44,
+  "scores": {
+   "ptm": [
+    0.8065,
+    0.7468
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8181,
+    0.7906
+   ],
+   "confidence_score": [
+    0.8157,
+    0.7818
+   ]
+  }
+ },
+ "AOTInductor fp32, TF32 matmuls": {
+  "first_s": 1.771,
+  "median_s": 1.782,
+  "runs_s": [
+   1.773,
+   1.782,
+   1.785
+  ],
+  "work_gb": 0.44,
+  "scores": {
+   "ptm": [
+    0.7777,
+    0.7499
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8027,
+    0.7923
+   ],
+   "confidence_score": [
+    0.7977,
+    0.7839
+   ]
+  }
+ }
+}

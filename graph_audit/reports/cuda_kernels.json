@@ -1,0 +1,54 @@
+{
+ "returncode": 0,
+ "env": {
+  "gpu": "NVIDIA L40S",
+  "capability": "8.9",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "triton": "3.9.0",
+  "boltz": "/usr/local/lib/python3.12/site-packages/boltz/__init__.py",
+  "fixes_commit": "74e4526f39cb66894d6f6e86d8921963d1df60c4"
+ },
+ "config": "1 recycle, 3 steps, 1 sample",
+ "use_kernels": true,
+ "eager_fp32_s": 7.094,
+ "eager_bf16_s": 2.753,
+ "export_as_is": "torch._dynamo.exc.UncapturedHigherOrderOpError: This higher order operator doesn't work unless it is captured completely with torch.compile. Got graph break/error:",
+ "export_unwrapped_s": 167.2,
+ "kernel_ops": [
+  "cuequivariance.fused_gated_dual_gemm.default",
+  "cuequivariance.layer_norm_transpose.default",
+  "cuequivariance.triangle_attention.default"
+ ],
+ "kernel_registrations": {
+  "cuequivariance.fused_gated_dual_gemm.default": [
+   "Meta: registered at /usr/local/lib/python3.12/site-packages/torch/_library/custom_ops.py:1118 :: (none) [ boxed ]"
+  ],
+  "cuequivariance.layer_norm_transpose.default": [
+   "Meta: registered at /usr/local/lib/python3.12/site-packages/torch/_library/custom_ops.py:1118 :: (none) [ boxed ]"
+  ],
+  "cuequivariance.triangle_attention.default": [
+   "CUDA: registered at /usr/local/lib/python3.12/site-packages/torch/_library/custom_ops.py:1118 :: (none) [ boxed ]",
+   "Meta: registered at /usr/local/lib/python3.12/site-packages/torch/_library/custom_ops.py:1118 :: (none) [ boxed ]"
+  ]
+ },
+ "exported_vs_eager": {
+  "sample_atom_coords": 0.0,
+  "pdistogram": 0.0,
+  "plddt": 0.0,
+  "pae": 0.0,
+  "pde": 0.0,
+  "ptm": 0.0,
+  "iptm": 0.0,
+  "ligand_iptm": 0.0,
+  "protein_iptm": 0.0,
+  "pair_chains_iptm": 0.0,
+  "complex_plddt": 0.0,
+  "complex_iplddt": 0.0,
+  "complex_pde": 0.0,
+  "complex_ipde": 0.0,
+  "confidence_score": 0.0,
+  "coords_rmsd": 0.0
+ },
+ "aoti": "torch._inductor.exc.InductorError: CppCompileError: C++ compile error\n115936 |         AOTI_TORCH_ERROR_CODE_CHECK(aoti_torch_cuda_randint_low_out(while_loop_body_graph_0_1_buf36, -9223372036854775808L, 9223372036854775807L, static_cast<const int64_t*>(std::array<int64_t, 1>{284L}.data()), 1));\n       |                                                                                                                                                                                                                       ^\n/tmp/torchinductor_root/c6pxmrffb5p5etjxjn6ouvaf4fgxqbnmzz5q3yxfl53cn7n2yie7/crvlcg42ya45pwsqotnqurwiga4bijpzsmoewcyvaqi6ecwdsuu2.wrapper.cpp:143361:185: warning: integer constant is so large that it is unsigned\n143361 |     AOTI_TORCH_ERROR_CODE_CHECK(aoti_torch_cuda_randint_low_out(buf400, -9223372036854775808L, 9223372036854775807L, static_cast<const int64_t*>(std::array<int64_t, 1>{33L}.data()), 1));\n       |                                                                                                                                                                                         ^\n/tmp/torchinductor_root/c6pxmrffb5p5etjxjn6ouvaf4fgxqbnmzz5q3yxfl53cn7n2yie7/crvlcg42ya45pwsqotnqurwiga4bijpzsmoewcyvaqi6ecwdsuu2.wrapper.cpp:148207:212: warning: integer constant is so large that it is unsigned\n148207 |         AOTI_TORCH_ERROR_CODE_CHECK(aoti_torch_cuda_randint_low_out(while_loop_body_graph_0_0_buf8, -9223372036854775808L, 9223372036854775807L, static_cast<const int64_t*>(std::array<int64_t, 1>{3L}.data()), 1));\n       |                                                                                                                                                                                                                    ^\ng++: internal compiler error: Segmentation fault signal terminated program cc1plus\nPlease submit a full bug report, with preprocessed source (by using -freport-bug).\nSee <file:///usr/share/doc/gcc-13/README.Bugs> for instructions."
+}

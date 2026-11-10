@@ -1,0 +1,258 @@
+[
+ {
+  "kind": "no-snapshot",
+  "predict_s": 9.662,
+  "same_as_boot": true,
+  "boot": {
+   "import_s": 3.11,
+   "cuda_init_s": 0.15,
+   "load_s": 31.03,
+   "warmup_s": 17.31
+  },
+  "boot_id": {
+   "task_id": "ta-01M784EVB7P6MRD68GQ6JW7BQR",
+   "time": 1794495758.5609994,
+   "snap_restore": false
+  },
+  "ready_id": {
+   "task_id": "ta-01M784EVB7P6MRD68GQ6JW7BQR",
+   "time": 1794495758.5609994,
+   "snap_restore": false
+  },
+  "scores": {
+   "ptm": [
+    0.8021,
+    0.7579
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8209,
+    0.7877
+   ],
+   "confidence_score": [
+    0.8172,
+    0.7818
+   ]
+  },
+  "cls": "EagerBaseline",
+  "client_s": 69.33,
+  "cold_penalty_s": 59.67
+ },
+ {
+  "kind": "no-snapshot",
+  "predict_s": 9.711,
+  "same_as_boot": true,
+  "boot": {
+   "import_s": 1.83,
+   "cuda_init_s": 0.27,
+   "load_s": 29.54,
+   "warmup_s": 17.185
+  },
+  "boot_id": {
+   "task_id": "ta-01M784GY2XA9XD1FT4K6V1JE2R",
+   "time": 1794495824.398501,
+   "snap_restore": false
+  },
+  "ready_id": {
+   "task_id": "ta-01M784GY2XA9XD1FT4K6V1JE2R",
+   "time": 1794495824.398501,
+   "snap_restore": false
+  },
+  "scores": {
+   "ptm": [
+    0.8021,
+    0.7579
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8209,
+    0.7877
+   ],
+   "confidence_score": [
+    0.8172,
+    0.7818
+   ]
+  },
+  "cls": "EagerBaseline",
+  "client_s": 65.88,
+  "cold_penalty_s": 56.17
+ },
+ {
+  "kind": "snapshot-created",
+  "predict_s": 5.952,
+  "same_as_boot": true,
+  "boot": {
+   "import_s": 2.94,
+   "cuda_init_s": 0.16,
+   "load_s": 32.16,
+   "warmup_s": 14.064,
+   "first_op_s": 0.002
+  },
+  "boot_id": {
+   "task_id": "ta-01M784K269WDTTCFD51B34E4TR",
+   "time": 1794495896.7258756,
+   "snap_restore": true
+  },
+  "ready_id": {
+   "task_id": "ta-01M784K269WDTTCFD51B34E4TR",
+   "time": 1794495900.672213,
+   "snap_restore": true
+  },
+  "scores": {
+   "ptm": [
+    0.8021,
+    0.7579
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8209,
+    0.7877
+   ],
+   "confidence_score": [
+    0.8172,
+    0.7818
+   ]
+  },
+  "cls": "EagerSnapshot",
+  "client_s": 72.54,
+  "cold_penalty_s": 66.59
+ },
+ {
+  "kind": "snapshot-created",
+  "predict_s": 11.594,
+  "same_as_boot": true,
+  "boot": {
+   "import_s": 2.22,
+   "cuda_init_s": 0.19,
+   "load_s": 34.96,
+   "warmup_s": 18.895,
+   "first_op_s": 0.002
+  },
+  "boot_id": {
+   "task_id": "ta-01M784YFGPW8TBW3RYHBVBHQ5R",
+   "time": 1794496276.0897958,
+   "snap_restore": true
+  },
+  "ready_id": {
+   "task_id": "ta-01M784YFGPW8TBW3RYHBVBHQ5R",
+   "time": 1794496278.8595674,
+   "snap_restore": true
+  },
+  "scores": {
+   "ptm": [
+    0.8021,
+    0.7579
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8209,
+    0.7877
+   ],
+   "confidence_score": [
+    0.8172,
+    0.7818
+   ]
+  },
+  "cls": "EagerSnapshot",
+  "client_s": 385.27,
+  "cold_penalty_s": 373.68
+ },
+ {
+  "kind": "restored",
+  "predict_s": 6.262,
+  "same_as_boot": true,
+  "boot": {
+   "import_s": 2.94,
+   "cuda_init_s": 0.16,
+   "load_s": 32.16,
+   "warmup_s": 14.064,
+   "first_op_s": 0.1
+  },
+  "boot_id": {
+   "task_id": "ta-01M784K269WDTTCFD51B34E4TR",
+   "time": 1794495896.7258756,
+   "snap_restore": true
+  },
+  "ready_id": {
+   "task_id": "ta-01M78510JGA5YJ89PQWAHG2M1R",
+   "time": 1794496306.2448943,
+   "snap_restore": true
+  },
+  "scores": {
+   "ptm": [
+    0.8021,
+    0.7579
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8209,
+    0.7877
+   ],
+   "confidence_score": [
+    0.8172,
+    0.7818
+   ]
+  },
+  "cls": "EagerSnapshot",
+  "client_s": 20.61,
+  "cold_penalty_s": 14.35
+ },
+ {
+  "kind": "restored",
+  "predict_s": 6.12,
+  "same_as_boot": true,
+  "boot": {
+   "import_s": 2.94,
+   "cuda_init_s": 0.16,
+   "load_s": 32.16,
+   "warmup_s": 14.064,
+   "first_op_s": 0.004
+  },
+  "boot_id": {
+   "task_id": "ta-01M784K269WDTTCFD51B34E4TR",
+   "time": 1794495896.7258756,
+   "snap_restore": true
+  },
+  "ready_id": {
+   "task_id": "ta-01M7851HAZG8Q6A5CE3NWVG0QR",
+   "time": 1794496320.0357761,
+   "snap_restore": true
+  },
+  "scores": {
+   "ptm": [
+    0.8021,
+    0.7579
+   ],
+   "iptm": [
+    0.0,
+    0.0
+   ],
+   "complex_plddt": [
+    0.8209,
+    0.7877
+   ],
+   "confidence_score": [
+    0.8172,
+    0.7818
+   ]
+  },
+  "cls": "EagerSnapshot",
+  "client_s": 13.64,
+  "cold_penalty_s": 7.52
+ }
+]

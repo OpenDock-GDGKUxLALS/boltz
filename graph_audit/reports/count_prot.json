@@ -1,0 +1,212 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "config": {
+  "recycling_steps": 3,
+  "sampling_steps": 200,
+  "diffusion_samples": 1,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "runs": [
+  {
+   "run": 0,
+   "seconds": 96.62853787490167,
+   "graphs_compiled_so_far": 21,
+   "launches_this_run": 3754,
+   "launches_by_graph": {
+    "0": 1,
+    "1": 2,
+    "2": 1,
+    "3": 1,
+    "4": 1,
+    "5": 200,
+    "6": 1,
+    "7": 750,
+    "8": 1990,
+    "9": 200,
+    "10": 200,
+    "11": 200,
+    "12": 199,
+    "13": 1,
+    "14": 1,
+    "15": 1,
+    "16": 1,
+    "17": 1,
+    "18": 1,
+    "19": 1,
+    "20": 1
+   }
+  },
+  {
+   "run": 1,
+   "seconds": 6.807099917088635,
+   "graphs_compiled_so_far": 21,
+   "launches_this_run": 3754,
+   "launches_by_graph": {
+    "0": 1,
+    "1": 2,
+    "2": 1,
+    "3": 1,
+    "4": 1,
+    "5": 200,
+    "7": 750,
+    "8": 1990,
+    "9": 200,
+    "10": 200,
+    "11": 200,
+    "12": 200,
+    "13": 1,
+    "14": 1,
+    "15": 1,
+    "16": 1,
+    "17": 1,
+    "18": 1,
+    "19": 1,
+    "20": 1
+   }
+  }
+ ],
+ "eager_seconds": 9.446429874980822,
+ "graphs": [
+  {
+   "idx": 0,
+   "ops": 348,
+   "first_op_at": "File \"boltz/model/models/boltz2.py\", line 415, in forward"
+  },
+  {
+   "idx": 1,
+   "ops": 14,
+   "first_op_at": "File \"boltz/model/modules/encodersv2.py\", line 51, in forward"
+  },
+  {
+   "idx": 2,
+   "ops": 36,
+   "first_op_at": "File \"boltz/model/modules/encodersv2.py\", line 73, in torch_dynamo_resume_in_forward_at_64"
+  },
+  {
+   "idx": 3,
+   "ops": 57696,
+   "first_op_at": "File \"boltz/model/models/boltz2.py\", line 426, in torch_dynamo_resume_in_forward_at_425"
+  },
+  {
+   "idx": 4,
+   "ops": 7,
+   "first_op_at": "File \"boltz/model/modules/diffusionv2.py\", line 280, in sample_schedule"
+  },
+  {
+   "idx": 5,
+   "ops": 63,
+   "first_op_at": "File \"boltz/model/modules/utils.py\", line 61, in compute_random_augmentation"
+  },
+  {
+   "idx": 6,
+   "ops": 2040,
+   "first_op_at": "File \"boltz/model/modules/diffusionv2.py\", line 257, in preconditioned_network_forward"
+  },
+  {
+   "idx": 7,
+   "ops": 4,
+   "first_op_at": "File \"boltz/model/potentials/potentials.py\", line 92, in compute_gradient"
+  },
+  {
+   "idx": 8,
+   "ops": 2,
+   "first_op_at": "File \"boltz/model/potentials/potentials.py\", line 96, in compute_gradient"
+  },
+  {
+   "idx": 9,
+   "ops": 16,
+   "first_op_at": "File \"boltz/model/loss/diffusionv2.py\", line 18, in weighted_rigid_align"
+  },
+  {
+   "idx": 10,
+   "ops": 11,
+   "first_op_at": "File \"boltz/model/loss/diffusionv2.py\", line 42, in torch_dynamo_resume_in_weighted_rigid_align_at_34"
+  },
+  {
+   "idx": 11,
+   "ops": 12,
+   "first_op_at": "File \"boltz/model/loss/diffusionv2.py\", line 65, in torch_dynamo_resume_in_weighted_rigid_align_at_57"
+  },
+  {
+   "idx": 12,
+   "ops": 2041,
+   "first_op_at": "File \"boltz/model/modules/diffusionv2.py\", line 257, in preconditioned_network_forward"
+  },
+  {
+   "idx": 13,
+   "ops": 9,
+   "first_op_at": "File \"boltz/model/models/boltz2.py\", line 548, in torch_dynamo_resume_in_forward_at_534"
+  },
+  {
+   "idx": 14,
+   "ops": 5,
+   "first_op_at": "File \"boltz/model/modules/confidencev2.py\", line 156, in forward"
+  },
+  {
+   "idx": 15,
+   "ops": 36,
+   "first_op_at": "File \"boltz/model/modules/encodersv2.py\", line 73, in torch_dynamo_resume_in_forward_at_64"
+  },
+  {
+   "idx": 16,
+   "ops": 1700,
+   "first_op_at": "File \"boltz/model/modules/confidencev2.py\", line 167, in torch_dynamo_resume_in_forward_at_166"
+  },
+  {
+   "idx": 17,
+   "ops": 107,
+   "first_op_at": "File \"boltz/model/modules/confidencev2.py\", line 286, in forward"
+  },
+  {
+   "idx": 18,
+   "ops": 16,
+   "first_op_at": "File \"boltz/model/layers/confidence_utils.py\", line 8, in compute_collinear_mask"
+  },
+  {
+   "idx": 19,
+   "ops": 97,
+   "first_op_at": "File \"boltz/model/layers/confidence_utils.py\", line 141, in torch_dynamo_resume_in_compute_ptms_at_137"
+  },
+  {
+   "idx": 20,
+   "ops": 18,
+   "first_op_at": "File \"boltz/model/layers/confidence_utils.py\", line 217, in torch_dynamo_resume_in_compute_ptms_at_212"
+  }
+ ],
+ "recompile_log": [
+  "Recompiling function compute_gradient in ./src/boltz/model/potentials/potentials.py:91",
+  "    triggered by the following guard failure(s):",
+  "    - 9/0: ___check_type_id(self, 53436199952), type=<class 'boltz.model.potentials.potentials.ContactPotentital'>  # index, args, com_args, ref_args, operator_args = self.compute_args(  # src/boltz/model/potentials/potentials.py:92 in compute_gradient (HINT: type ContactPotentital)",
+  "    - User stack trace:",
+  "    -   File \"./src/boltz/model/potentials/potentials.py\", line 92, in compute_gradient",
+  "    -     index, args, com_args, ref_args, operator_args = self.compute_args(",
+  "Recompiling function compute_gradient in ./src/boltz/model/potentials/potentials.py:91",
+  "    triggered by the following guard failure(s):",
+  "    - 9/0: ___check_type_id(self, 53436199952), type=<class 'boltz.model.potentials.potentials.ContactPotentital'>  # index, args, com_args, ref_args, operator_args = self.compute_args(  # src/boltz/model/potentials/potentials.py:92 in compute_gradient (HINT: type ContactPotentital)",
+  "    - User stack trace:",
+  "    -   File \"./src/boltz/model/potentials/potentials.py\", line 92, in compute_gradient",
+  "    -     index, args, com_args, ref_args, operator_args = self.compute_args(",
+  "Recompiling function preconditioned_network_forward in ./src/boltz/model/modules/diffusionv2.py:251",
+  "    triggered by the following guard failure(s):",
+  "    - 8/0: sigma == 4608.000469970706                               # if isinstance(sigma, float):  # src/boltz/model/modules/diffusionv2.py:259 in preconditioned_network_forward",
+  "    - User stack trace:",
+  "    -   File \"./src/boltz/model/modules/diffusionv2.py\", line 259, in preconditioned_network_forward",
+  "    -     if isinstance(sigma, float):",
+  "Recompiling function preconditioned_network_forward in ./src/boltz/model/modules/diffusionv2.py:251",
+  "    triggered by the following guard failure(s):",
+  "    - 8/0: sigma == 4608.000469970706                               # if isinstance(sigma, float):  # src/boltz/model/modules/diffusionv2.py:259 in preconditioned_network_forward",
+  "    - User stack trace:",
+  "    -   File \"./src/boltz/model/modules/diffusionv2.py\", line 259, in preconditioned_network_forward",
+  "    -     if isinstance(sigma, float):",
+  "Recompiling function torch_dynamo_resume_in_forward_at_64 in ./src/boltz/model/modules/encodersv2.py:64",
+  "    triggered by the following guard failure(s):",
+  "    - 2/0: tensor 'self._modules['linear_layer']._parameters['weight']' requires_grad mismatch. expected requires_grad=0. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.",
+  "Recompiling function torch_dynamo_resume_in_forward_at_64 in ./src/boltz/model/modules/encodersv2.py:64",
+  "    triggered by the following guard failure(s):",
+  "    - 2/0: tensor 'self._modules['linear_layer']._parameters['weight']' requires_grad mismatch. expected requires_grad=0. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters."
+ ]
+}

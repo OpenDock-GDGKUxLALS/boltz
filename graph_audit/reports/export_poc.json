@@ -1,0 +1,32 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "config": {
+  "recycling_steps": 3,
+  "sampling_steps": 200,
+  "diffusion_samples": 1,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "cond": {
+  "ok": true,
+  "export_seconds": 0.5,
+  "call_function_nodes": 86
+ },
+ "step": {
+  "ok": true,
+  "export_seconds": 5.7,
+  "call_function_nodes": 1673
+ },
+ "trunk": {
+  "ok": true,
+  "export_seconds": 439.3,
+  "call_function_nodes": 50722
+ },
+ "exported_pipeline_seconds": 17.08,
+ "max_abs_diff_vs_eager_coords": 0.0,
+ "max_abs_diff_vs_eager_s": 0.0,
+ "max_abs_diff_vs_eager_z": 0.0
+}

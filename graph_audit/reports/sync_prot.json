@@ -1,0 +1,54 @@
+{
+ "config": {
+  "recycling_steps": 3,
+  "sampling_steps": 200,
+  "diffusion_samples": 1,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ },
+ "total": 1006,
+ "sites": [
+  {
+   "kind": "item",
+   "site": "boltz/model/modules/diffusionv2.py:372 (sample)",
+   "count": 600
+  },
+  {
+   "kind": "__bool__",
+   "site": "boltz/model/loss/diffusionv2.py:34 (weighted_rigid_align)",
+   "count": 200
+  },
+  {
+   "kind": "__bool__",
+   "site": "boltz/model/loss/diffusionv2.py:57 (weighted_rigid_align)",
+   "count": 200
+  },
+  {
+   "kind": "__bool__",
+   "site": "boltz/model/modules/encodersv2.py:64 (forward)",
+   "count": 2
+  },
+  {
+   "kind": "item",
+   "site": "boltz/model/layers/confidence_utils.py:47 (compute_frame_pred)",
+   "count": 1
+  },
+  {
+   "kind": "item",
+   "site": "boltz/model/layers/confidence_utils.py:48 (compute_frame_pred)",
+   "count": 1
+  },
+  {
+   "kind": "__bool__",
+   "site": "boltz/model/layers/confidence_utils.py:50 (compute_frame_pred)",
+   "count": 1
+  },
+  {
+   "kind": "tolist",
+   "site": "boltz/model/layers/confidence_utils.py:212 (compute_ptms)",
+   "count": 1
+  }
+ ]
+}

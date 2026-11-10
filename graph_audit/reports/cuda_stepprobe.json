@@ -1,0 +1,54 @@
+{
+ "returncode": 0,
+ "env": {
+  "gpu": "NVIDIA A10",
+  "capability": "8.6",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "triton": "3.9.0",
+  "boltz": "/usr/local/lib/python3.12/site-packages/boltz/__init__.py",
+  "fixes_commit": "74e4526f39cb66894d6f6e86d8921963d1df60c4"
+ },
+ "steps": [
+  {
+   "input": 0.0,
+   "sigma": 0.0,
+   "output": 0.0,
+   "sigma_value": [
+    4608.0
+   ]
+  },
+  {
+   "input": 0.001953125,
+   "sigma": 0.0,
+   "output": 7.915496826171875e-05,
+   "sigma_value": [
+    827.620849609375
+   ]
+  },
+  {
+   "input": 0.0047454833984375,
+   "sigma": 0.0,
+   "output": 0.46828746795654297,
+   "sigma_value": [
+    84.65514373779297
+   ]
+  },
+  {
+   "input": 0.6092529296875,
+   "sigma": 0.0,
+   "output": 0.9256439208984375,
+   "sigma_value": [
+    1.5647313594818115
+   ]
+  },
+  {
+   "input": 1.3833770751953125,
+   "sigma": 0.0,
+   "output": 1.3832244873046875,
+   "sigma_value": [
+    0.0015999983297660947
+   ]
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "pairformer_module": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": false,
+   "error": "ValueError: Not supported",
+   "at": "boltz/model/layers/triangular_attention/utils.py:90 (_fetch_dims)",
+   "seconds": 0.8
+  },
+  "export_strict": {
+   "ok": true,
+   "call_function_nodes": 10623,
+   "seconds": 46.7
+  }
+ },
+ "structure_module.score_model": {
+  "dynamo": {
+   "graph_count": 1,
+   "graph_break_count": 0,
+   "break_sites": []
+  },
+  "export_nonstrict": {
+   "ok": false,
+   "error": "ValueError: Unsupported input type <class 'functools.partial'>. Export only supports pytree containers of basic types (Tensor, int, float, ...) as input. To register a custom dataclass, use torch.export.register_dataclass. To register a custom container type, use torch.utils._pytree.register_pytree_node. To register a constant input, use torch.utils._pytree.register_constant",
+   "at": "",
+   "seconds": 0.0
+  },
+  "export_strict": {
+   "ok": false,
+   "error": "UserError: It looks like one of the inputs with type `<class 'functools.partial'>` is not supported or pytree-flattenable. \nExported graphs inputs can only contain the following supported types: [<class 'torch.Tensor'>, <class 'torch.SymInt'>, <class 'torch.SymFloat'>, <class 'torch.SymBool'>, <class 'torch.ScriptObject'>, <class 'torch.export.dynamic_shapes._IntWrapper'>, <class 'torch.nn.attention._SDPBackend'>, <class 'torch.utils._pytree.SequenceKey'>, <class 'torch.utils._pytree.MappingKey'>, <class 'complex'>, <class 'torch.utils._pytree.GetAttrKey'>, <class 'NotImplementedType'>, <class 'torch.iinfo'>, <class 'bytes'>, <class 'torch.memory_format'>, <class 'bool'>, <class 'str'>, <class 'torch.device'>, <class 'code'>, <class 'torch._utils._CudaDeviceProperties'>, <class 'ellipsis'>, <class 'torch.dtype'>, <class 'int'>, <class 'float'>, <class 'NoneType'>, <class 'torch.layout'>, <class 'torch.finfo'>]. \nIf you are using a custom class object, please register a pytree_flatten/unflatten function using `torch.utils._pytree.register_pytree_node` or `torch.export.register_dataclass`.\nThe error above occurred when calling torch.export.export. If you would like to view some more information about this error, and get a list of all other errors that may occur in your export call, you can replace your `export()` call with `draft_export()`.",
+   "at": "",
+   "seconds": 0.0
+  }
+ },
+ "confidence_module": {
+  "dynamo": {
+   "graph_count": 8,
+   "graph_break_count": 7,
+   "break_sites": [
+    {
+     "where": "boltz/model/modules/encodersv2.py:64 (forward)",
+     "reasons": [
+      {
+       "reason": "Data-dependent branching Explanation: Detected data-dependent branching (e.g. `if my_tensor.sum() > 0:`). Dynamo does not support tracing dynamic control flow. The branch condition involves a tensor computed as follows: # File \"./src/boltz/model/modules/encodersv2.py\", line 64, in forward, code: if self.cyclic_pos_enc and torch.any(feats[\"cyclic_period\"] > 0): l_feats_cycl",
+       "n": 1
+      },
+      {
+       "reason": "generic_jump TensorVariable()",
+       "n": 1
+      }
+     ],
+     "count": 2,
+     "stack": [
+      "boltz/model/modules/confidencev2.py:166 (forward)",
+      "boltz/model/modules/encodersv2.py:64 (forward)"
+     ]
+    },
+    {
+     "where": "boltz/model/layers/confidence_utils.py:44 (compute_frame_pred)",
+     "reasons": [
+      {
+       "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.ht",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/modules/confidencev2.py:221 (forward)",
+      "boltz/model/modules/confidencev2.py:481 (forward)",
+      "boltz/model/layers/confidence_utils.py:137 (compute_ptms)",
+      "boltz/model/layers/confidence_utils.py:44 (compute_frame_pred)"
+     ]
+    },
+    {
+     "where": "boltz/model/modules/confidencev2.py:480 (forward)",
+     "reasons": [
+      {
+       "reason": "step_unsupported",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/modules/confidencev2.py:480 (forward)"
+     ]
+    },
+    {
+     "where": "boltz/model/layers/confidence_utils.py:230 (compute_ptms)",
+     "reasons": [
+      {
+       "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.ht",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/layers/confidence_utils.py:230 (compute_ptms)"
+     ]
+    }
+   ]
+  },
+  "export_nonstrict": {
+   "ok": false,
+   "error": "GuardOnDataDependentSymNode: Could not guard on data-dependent expression Eq(u0, 1) (unhinted: Eq(u0, 1)).  (Size-like symbols: none)\nconsider using data-dependent friendly APIs such as guard_or_false, guard_or_true and statically_known_true. If this was caused by Python `not` on a symbolic boolean, use torch.sym_not() or an equivalent comparison instead; Python `not` cannot be overloaded outside Dynamo bytecode tracing.\nCaused by: (_export/non_strict_utils.py:1410 in __torch_function__)\nFor more information, run with TORCH_LOGS=\"dynamic\"\nFor extended logs when we create symbols, also add TORCHDYNAMO_EXTENDED_DEBUG_CREATE_SYMBOL=\"u0\"\nIf you suspect the guard was triggered from C++, add TORCHDYNAMO_EXTENDED_DEBUG_CPP=1",
+   "at": "boltz/model/modules/encodersv2.py:64 (forward)",
+   "seconds": 0.2
+  },
+  "export_strict": {
+   "ok": false,
+   "error": "Unsupported: Data-dependent branching\n  Explanation: Detected data-dependent branching (e.g. `if my_tensor.sum() > 0:`). Dynamo does not support tracing dynamic control flow.\n      The branch condition involves a tensor computed as follows:\n        # File \"./.venv/lib/python3.12/site-packages/torch/_dynamo/functional_export.py\", line -1, in forward\n        l_flat_args_21_: graph input (L_flat_args_21_)\n        # File \"./src/boltz/model/modules/encodersv2.py\", line 64, in forward, code: if self.cyclic_pos_enc and torch.any(feats[\"cyclic_period\"] > 0):",
+   "at": "",
+   "seconds": 0.1
+  }
+ },
+ "structure_module.sample": {
+  "dynamo": {
+   "graph_count": 9,
+   "graph_break_count": 8,
+   "break_sites": [
+    {
+     "where": "boltz/model/loss/diffusionv2.py:34 (weighted_rigid_align)",
+     "reasons": [
+      {
+       "reason": "generic_jump TensorVariable()",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/loss/diffusionv2.py:34 (weighted_rigid_align)"
+     ]
+    },
+    {
+     "where": "boltz/model/loss/diffusionv2.py:57 (torch_dynamo_resume_in_weighted_rigid_align_at_34)",
+     "reasons": [
+      {
+       "reason": "generic_jump TensorVariable()",
+       "n": 1
+      }
+     ],
+     "count": 1,
+     "stack": [
+      "boltz/model/loss/diffusionv2.py:57 (torch_dynamo_resume_in_weighted_rigid_align_at_34)"
+     ]
+    }
+   ]
+  }
+ }
+}

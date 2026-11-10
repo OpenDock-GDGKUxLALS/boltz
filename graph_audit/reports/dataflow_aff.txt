@@ -1,0 +1,15 @@
+batch: {'res_type': (1, 211, 33), 'msa': (1, 249, 211), 'ref_pos': (1, 1536, 3), 'atom_to_token': (1, 1536, 211)}
+
+[affinity_module1.pairformer_stack]
+   in : z=(1, 211, 211, 128) float32, pair_mask=(1, 211, 211) float32
+   out: (1, 211, 211, 128) float32
+
+[affinity_module1.affinity_heads]
+   in : z=(1, 211, 211, 128) float32, feats=feats<80 tensors>
+   out: {affinity_pred_value: (1, 1) float32, affinity_logits_binary: (1, 1) float32}
+
+[affinity_module1]
+   in : s_inputs=(1, 211, 384) float32, z=(1, 211, 211, 128) float32, x_pred=(1, 1, 1536, 3) float32, feats=feats<80 tensors>
+   out: {affinity_pred_value: (1, 1) float32, affinity_logits_binary: (1, 1) float32}
+
+[Boltz2.forward] out: {pdistogram: (1, 211, 211, 1, 64) float32, s: (1, 211, 384) float32, z: (1, 211, 211, 128) float32, sample_atom_coords: (3, 1536, 3) float32, pde_logits: (3, 211, 211, 64) float32, plddt_logits: (3, 211, 50) float32, resolved_logits: (3, 211, 2) float32, pde: (3, 211, 211) float32, plddt: (3, 211) float32, complex_plddt: (3,) float32, complex_iplddt: (3,) float32, complex_pde: (3,) float32, complex_ipde: (3,) float32, pae_logits: (3, 211, 211, 64) float32, pae: (3, 211, 211) float32, ptm: (3,) float32, iptm: (3,) float32, ligand_iptm: (3,) float32, protein_iptm: (3,) float32, affinity_pred_value: (1, 1) float32, affinity_probability_binary: (1, 1) float32, affinity_pred_value1: (1, 1) float32, affinity_probability_binary1: (1, 1) float32, affinity_pred_value2: (1, 1) float32, affinity_probability_binary2: (1, 1) float32}

@@ -1,0 +1,146 @@
+{
+ "returncode": 0,
+ "env": {
+  "gpu": "NVIDIA A10",
+  "capability": "8.6",
+  "torch": "2.15.0+cu132",
+  "cuda": "13.2",
+  "triton": "3.9.0",
+  "boltz": "/usr/local/lib/python3.12/site-packages/boltz/__init__.py",
+  "fixes_commit": "74e4526f39cb66894d6f6e86d8921963d1df60c4"
+ },
+ "pdb_upstream": {
+  "break": "/opt/boltz-upstream/src/boltz/model/modules/diffusionv2.py:523",
+  "hits": 200
+ },
+ "pdb_graph_fixes": {
+  "break": "/usr/local/lib/python3.12/site-packages/boltz/model/modules/diffusionv2.py:339",
+  "hits": 200
+ },
+ "pdb_graph_fixes_reciprocal": {
+  "break": "/usr/local/lib/python3.12/site-packages/boltz/model/modules/diffusionv2.py:339",
+  "hits": 200
+ },
+ "pdb_graph_fixes_reciprocal64": {
+  "break": "/usr/local/lib/python3.12/site-packages/boltz/model/modules/diffusionv2.py:339",
+  "hits": 200
+ },
+ "graph_fixes": {
+  "first_difference": {
+   "step": 0,
+   "t_hat": 4608.000030517578,
+   "noisy": 0.0,
+   "denoised": 0.0,
+   "update": 0.0009765625
+  },
+  "steps_with_differences": 200,
+  "around_first": [
+   {
+    "step": 0,
+    "t_hat": 4608.000030517578,
+    "noisy": 0.0,
+    "denoised": 0.0,
+    "update": 0.0009765625
+   },
+   {
+    "step": 1,
+    "t_hat": 4468.805888970732,
+    "noisy": 0.017822265625,
+    "denoised": 0.0001163482666015625,
+    "update": 0.005859375
+   }
+  ],
+  "final_outputs_vs_upstream": {
+   "sample_atom_coords": 0.001922607421875,
+   "plddt": 0.0,
+   "pae": 0.0,
+   "pde": 0.0,
+   "ptm": 0.0,
+   "iptm": 0.0,
+   "ligand_iptm": 0.0,
+   "protein_iptm": 0.0,
+   "pair_chains_iptm": 1.1920928955078125e-07,
+   "complex_plddt": 0.0,
+   "complex_iplddt": 0.0,
+   "complex_pde": 0.0,
+   "complex_ipde": 0.0,
+   "pdistogram": 0.0,
+   "s": 0.0,
+   "z": 0.0
+  }
+ },
+ "graph_fixes_reciprocal": {
+  "first_difference": {
+   "step": 6,
+   "t_hat": 3825.573072210769,
+   "noisy": 0.0,
+   "denoised": 0.0,
+   "update": 0.00146484375
+  },
+  "steps_with_differences": 194,
+  "around_first": [
+   {
+    "step": 5,
+    "t_hat": 3947.4435320022603,
+    "noisy": 0.0,
+    "denoised": 0.0,
+    "update": 0.0
+   },
+   {
+    "step": 6,
+    "t_hat": 3825.573072210769,
+    "noisy": 0.0,
+    "denoised": 0.0,
+    "update": 0.00146484375
+   },
+   {
+    "step": 7,
+    "t_hat": 3706.9422608782334,
+    "noisy": 0.01416015625,
+    "denoised": 6.103515625e-05,
+    "update": 0.00439453125
+   }
+  ],
+  "final_outputs_vs_upstream": {
+   "sample_atom_coords": 0.00042819976806640625,
+   "plddt": 0.0,
+   "pae": 0.0,
+   "pde": 0.0,
+   "ptm": 0.0,
+   "iptm": 0.0,
+   "ligand_iptm": 0.0,
+   "protein_iptm": 0.0,
+   "pair_chains_iptm": 1.1920928955078125e-07,
+   "complex_plddt": 0.0,
+   "complex_iplddt": 0.0,
+   "complex_pde": 0.0,
+   "complex_ipde": 0.0,
+   "pdistogram": 0.0,
+   "s": 0.0,
+   "z": 0.0
+  }
+ },
+ "graph_fixes_reciprocal64": {
+  "first_difference": null,
+  "steps_with_differences": 0,
+  "around_first": [],
+  "final_outputs_vs_upstream": {
+   "sample_atom_coords": 0.0,
+   "plddt": 0.0,
+   "pae": 0.0,
+   "pde": 0.0,
+   "ptm": 0.0,
+   "iptm": 0.0,
+   "ligand_iptm": 0.0,
+   "protein_iptm": 0.0,
+   "pair_chains_iptm": 1.1920928955078125e-07,
+   "complex_plddt": 0.0,
+   "complex_iplddt": 0.0,
+   "complex_pde": 0.0,
+   "complex_ipde": 0.0,
+   "pdistogram": 0.0,
+   "s": 0.0,
+   "z": 0.0
+  }
+ }
+}

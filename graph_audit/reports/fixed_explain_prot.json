@@ -1,0 +1,196 @@
+{
+ "device": "mps",
+ "torch": "2.15.0",
+ "graph_count": 11,
+ "graph_break_count": 10,
+ "op_count": 24801,
+ "ops_per_graph": [
+  18721,
+  13,
+  4766,
+  4,
+  53,
+  18,
+  1040,
+  67,
+  14,
+  87,
+  18
+ ],
+ "break_sites": [
+  {
+   "where": "boltz/model/modules/diffusionv2.py:412 (sample)",
+   "reasons": [
+    {
+     "reason": "Tensor.tolist() with non-integer tensor Explanation: Dynamo currently does not support tracing `tolist()` on non-integer tensors. Hint: Ensure the input tensor to `tolist()` is an integer type (e.g., int8, int16, int32, int64). Developer debug context: call_method TensorVariable() to_list For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site",
+     "n": 2
+    }
+   ],
+   "count": 2,
+   "stack": [
+    "boltz/model/models/boltz2.py:534 (forward)",
+    "boltz/model/modules/diffusionv2.py:412 (sample)"
+   ]
+  },
+  {
+   "where": "boltz/model/layers/confidence_utils.py:44 (compute_frame_pred)",
+   "reasons": [
+    {
+     "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.ht",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/models/boltz2.py:590 (forward)",
+    "boltz/model/modules/confidencev2.py:126 (forward)",
+    "boltz/model/modules/confidencev2.py:221 (forward)",
+    "boltz/model/modules/confidencev2.py:481 (forward)",
+    "boltz/model/layers/confidence_utils.py:137 (compute_ptms)",
+    "boltz/model/layers/confidence_utils.py:44 (compute_frame_pred)"
+   ]
+  },
+  {
+   "where": "boltz/model/modules/confidencev2.py:480 (forward)",
+   "reasons": [
+    {
+     "reason": "step_unsupported",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/modules/confidencev2.py:480 (forward)"
+   ]
+  },
+  {
+   "where": "boltz/model/layers/confidence_utils.py:230 (compute_ptms)",
+   "reasons": [
+    {
+     "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.ht",
+     "n": 1
+    }
+   ],
+   "count": 1,
+   "stack": [
+    "boltz/model/layers/confidence_utils.py:230 (compute_ptms)"
+   ]
+  }
+ ],
+ "breaks_in_order": [
+  {
+   "reason": "Tensor.tolist() with non-integer tensor Explanation: Dynamo currently does not support tracing `tolist()` on non-integer tensors. Hint: Ensure the input tensor to `tolist()` is an integer type (e.g., int8, int16, int32, int64). Developer debug context: call_method TensorVariable() to_list For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0109.html",
+   "user_stack": [
+    "boltz/model/models/boltz2.py:534 (forward)",
+    "boltz/model/modules/diffusionv2.py:412 (sample)"
+   ]
+  },
+  {
+   "reason": "Tensor.tolist() with non-integer tensor Explanation: Dynamo currently does not support tracing `tolist()` on non-integer tensors. Hint: Ensure the input tensor to `tolist()` is an integer type (e.g., int8, int16, int32, int64). Developer debug context: call_method TensorVariable() to_list For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0109.html",
+   "user_stack": [
+    "boltz/model/modules/diffusionv2.py:412 (sample)"
+   ]
+  },
+  {
+   "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html",
+   "user_stack": [
+    "boltz/model/models/boltz2.py:590 (forward)",
+    "boltz/model/modules/confidencev2.py:126 (forward)",
+    "boltz/model/modules/confidencev2.py:221 (forward)",
+    "boltz/model/modules/confidencev2.py:481 (forward)",
+    "boltz/model/layers/confidence_utils.py:137 (compute_ptms)",
+    "boltz/model/layers/confidence_utils.py:44 (compute_frame_pred)"
+   ]
+  },
+  {
+   "reason": "step_unsupported",
+   "user_stack": [
+    "boltz/model/modules/confidencev2.py:480 (forward)"
+   ]
+  },
+  {
+   "reason": "Dynamic shape operator Explanation: Operator `aten._unique2.default`'s output shape depends on input Tensor data. Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True` Developer debug context: aten._unique2.default For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html",
+   "user_stack": [
+    "boltz/model/layers/confidence_utils.py:230 (compute_ptms)"
+   ]
+  }
+ ],
+ "graph_map": [
+  {
+   "graph": 0,
+   "ops": 29365,
+   "starts_at": "boltz/model/modules/trunkv2.py:173 (forward)",
+   "ends_at": "?"
+  },
+  {
+   "graph": 1,
+   "ops": 15,
+   "starts_at": "boltz/model/potentials/potentials.py:659 (compute_args)",
+   "ends_at": "boltz/model/modules/diffusionv2.py:409 (sample)"
+  },
+  {
+   "graph": 2,
+   "ops": 6483,
+   "starts_at": "boltz/model/modules/diffusionv2.py:426 (torch_dynamo_resume_in_sample_at_412)",
+   "ends_at": "boltz/model/modules/diffusionv2.py:350 (denoise_step)"
+  },
+  {
+   "graph": 3,
+   "ops": 9,
+   "starts_at": "?",
+   "ends_at": "boltz/model/models/boltz2.py:601 (torch_dynamo_resume_in_forward_at_534)"
+  },
+  {
+   "graph": 4,
+   "ops": 59,
+   "starts_at": "boltz/model/modules/encodersv2.py:51 (forward)",
+   "ends_at": "boltz/model/modules/encodersv2.py:113 (forward)"
+  },
+  {
+   "graph": 5,
+   "ops": 22,
+   "starts_at": "boltz/model/modules/trunkv2.py:37 (forward)",
+   "ends_at": "boltz/model/modules/trunkv2.py:57 (forward)"
+  },
+  {
+   "graph": 6,
+   "ops": 1640,
+   "starts_at": "boltz/model/layers/dropout.py:32 (get_dropout_mask)",
+   "ends_at": "?"
+  },
+  {
+   "graph": 7,
+   "ops": 107,
+   "starts_at": "boltz/model/modules/confidencev2.py:286 (forward)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:123 (compute_aggregated_metric)"
+  },
+  {
+   "graph": 8,
+   "ops": 16,
+   "starts_at": "boltz/model/layers/confidence_utils.py:8 (compute_collinear_mask)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:15 (compute_collinear_mask)"
+  },
+  {
+   "graph": 9,
+   "ops": 97,
+   "starts_at": "boltz/model/layers/confidence_utils.py:141 (torch_dynamo_resume_in_compute_ptms_at_137)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:218 (torch_dynamo_resume_in_compute_ptms_at_137)"
+  },
+  {
+   "graph": 10,
+   "ops": 18,
+   "starts_at": "boltz/model/layers/confidence_utils.py:217 (torch_dynamo_resume_in_compute_ptms_at_212)",
+   "ends_at": "boltz/model/layers/confidence_utils.py:224 (torch_dynamo_resume_in_compute_ptms_at_212)"
+  }
+ ],
+ "seconds": 62.551612916984595,
+ "config": {
+  "recycling_steps": 1,
+  "sampling_steps": 3,
+  "diffusion_samples": 2,
+  "max_parallel_samples": null,
+  "write_confidence_summary": true,
+  "write_full_pae": false,
+  "write_full_pde": false
+ }
+}
