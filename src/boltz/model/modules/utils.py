@@ -1,6 +1,6 @@
 # started from code from https://github.com/lucidrains/alphafold3-pytorch, MIT License, Copyright (c) 2024 Phil Wang
 
-from functools import partial
+from functools import partial, reduce
 from typing import Optional
 
 import torch
@@ -10,6 +10,10 @@ from torch.nn import (
     Module,
 )
 from torch.types import Device
+
+scan = None  # the scan path is tested on torch 2.15; older versions run the Python loop
+if tuple(int(v) for v in torch.__version__.split(".")[:2]) >= (2, 15):
+    from torch._higher_order_ops.scan import scan
 
 LinearNoBias = partial(Linear, bias=False)
 
@@ -24,6 +28,16 @@ def autocast_device_type(device_type: str) -> str:
     from torch.amp.autocast_mode import is_autocast_available
 
     return device_type if is_autocast_available(device_type) else "cpu"
+
+
+def repeat_step(step, carry, xs):
+    """carry = step(carry, x) for each row x of xs: one scan when compiling or exporting
+    without autocast (scan bodies don't trace under autocast), else a Python loop (eager
+    scan would recompile every call)."""
+    tracing = scan is not None and torch.compiler.is_compiling()
+    if tracing and len(xs) and not torch.is_autocast_enabled(xs.device.type):
+        return scan(lambda c, x: (step(c, x), x.clone()), carry, xs)[0]  # Inductor needs tensor outputs
+    return reduce(step, xs, carry)
 
 
 def exists(v):

@@ -136,22 +136,7 @@ class ConfidenceModule(nn.Module):
                     )
                 )
 
-            out_dict = {}
-            for key in out_dicts[0]:
-                if key != "pair_chains_iptm":
-                    out_dict[key] = torch.cat([out[key] for out in out_dicts], dim=0)
-                else:
-                    pair_chains_iptm = {}
-                    for chain_idx1 in out_dicts[0][key]:
-                        chains_iptm = {}
-                        for chain_idx2 in out_dicts[0][key][chain_idx1]:
-                            chains_iptm[chain_idx2] = torch.cat(
-                                [out[key][chain_idx1][chain_idx2] for out in out_dicts],
-                                dim=0,
-                            )
-                        pair_chains_iptm[chain_idx1] = chains_iptm
-                    out_dict[key] = pair_chains_iptm
-            return out_dict
+            return {key: torch.cat([out[key] for out in out_dicts]) for key in out_dicts[0]}
 
         s_inputs = self.s_inputs_norm(s_inputs)
         if not self.no_update_s:
@@ -477,21 +462,7 @@ class ConfidenceHeads(nn.Module):
         out_dict["pae_logits"] = pae_logits
         out_dict["pae"] = compute_aggregated_metric(pae_logits, end=32)
 
-        try:
-            ptm, iptm, ligand_iptm, protein_iptm, pair_chains_iptm = compute_ptms(
-                pae_logits, x_pred, feats, multiplicity
-            )
-            out_dict["ptm"] = ptm
-            out_dict["iptm"] = iptm
-            out_dict["ligand_iptm"] = ligand_iptm
-            out_dict["protein_iptm"] = protein_iptm
-            out_dict["pair_chains_iptm"] = pair_chains_iptm
-        except Exception as e:
-            print(f"Error in compute_ptms: {e}")
-            out_dict["ptm"] = torch.zeros_like(complex_plddt)
-            out_dict["iptm"] = torch.zeros_like(complex_plddt)
-            out_dict["ligand_iptm"] = torch.zeros_like(complex_plddt)
-            out_dict["protein_iptm"] = torch.zeros_like(complex_plddt)
-            out_dict["pair_chains_iptm"] = torch.zeros_like(complex_plddt)
+        keys = ["ptm", "iptm", "ligand_iptm", "protein_iptm", "pair_chains_iptm"]
+        out_dict.update(zip(keys, compute_ptms(pae_logits, x_pred, feats, multiplicity)))
 
         return out_dict
