@@ -2,6 +2,7 @@ import torch
 from torch import nn
 
 from boltz.data import const
+from boltz.model.modules.utils import autocast_device_type
 
 
 def compute_collinear_mask(v1, v2):
@@ -23,6 +24,8 @@ def compute_frame_pred(
     resolved_mask=None,
     inference=False,
 ):
+    if inference:
+        return compute_frame_pred_inference(pred_atom_coords, frames_idx_true, feats, multiplicity)
     with torch.amp.autocast("cuda", enabled=False):
         asym_id_token = feats["asym_id"]
         asym_id_atom = torch.bmm(
@@ -110,6 +113,30 @@ def compute_frame_pred(
         frames_expanded[:, 1] - frames_expanded[:, 2],
     ).reshape(B // multiplicity, multiplicity, -1)
     return frames_idx_pred, mask_collinear_pred * feats["token_pad_mask"][:, None, :]
+
+
+def compute_frame_pred_inference(pred_atom_coords, frames_idx_true, feats, multiplicity):
+    """compute_frame_pred(inference=True) without the per-chain loop."""
+    x = pred_atom_coords.reshape(-1, multiplicity, *pred_atom_coords.shape[1:])
+    atom_to_token = feats["atom_to_token"].float()
+    same_chain = feats["asym_id"][:, :, None] == feats["asym_id"][:, None, :]
+    atoms_per_token = (atom_to_token * feats["atom_pad_mask"][:, :, None]).sum(1)
+    nonpolymer = feats["mol_type"] == const.chain_type_ids["NONPOLYMER"]
+    chain_atoms = (same_chain * atoms_per_token[:, None, :]).sum(-1)
+    ligand = nonpolymer & (chain_atoms >= 3) & feats["token_pad_mask"].bool()
+    frames = frames_idx_true.repeat_interleave(multiplicity, 0).reshape(*x.shape[:2], -1, 3)
+    if frames.shape[2] >= 3:  # a ligand frame needs 3 atoms, so 3 tokens
+        # Ligand tokens have one atom each, so the nearest atoms are searched over tokens.
+        token_atom = atom_to_token.argmax(dim=1)[:, None].expand(-1, multiplicity, -1)
+        xt = torch.gather(x, 2, token_atom[..., None].expand(-1, -1, -1, 3))
+        dist = ((xt[:, :, None] - xt[:, :, :, None]) ** 2).sum(-1) ** 0.5
+        in_chain = (same_chain & ligand[:, :, None] & ligand[:, None, :])[:, None]
+        nearest = torch.where(in_chain, dist, torch.inf).topk(3, -1, largest=False).indices
+        nearest = torch.gather(token_atom[:, :, None].expand_as(dist), 3, nearest)
+        frames = torch.where(ligand[:, None, :, None], nearest[..., [1, 0, 2]], frames)
+    f = torch.gather(x, 2, frames.flatten(2)[..., None].expand(-1, -1, -1, 3)).reshape(-1, 3, 3)
+    mask = compute_collinear_mask(f[:, 1] - f[:, 0], f[:, 1] - f[:, 2])
+    return frames, mask.reshape(*x.shape[:2], -1) * feats["token_pad_mask"][:, None]
 
 
 def compute_aggregated_metric(logits, end=1.0):
@@ -207,25 +234,14 @@ def compute_ptms(logits, x_preds, feats, multiplicity):
         dim=1,
     ).values
 
-    # Compute pair chain ipTM
-    chain_pair_iptm = {}
-    asym_ids_list = torch.unique(asym_id).tolist()
-    for idx1 in asym_ids_list:
-        chain_iptm = {}
-        for idx2 in asym_ids_list:
-            mask_pair_chain = (
-                maski[:, :, None]
-                * (asym_id[:, None, :] == idx1)
-                * (asym_id[:, :, None] == idx2)
-                * mask_pad[:, None, :]
-                * mask_pad[:, :, None]
-            )
-
-            chain_iptm[idx2] = torch.max(
-                torch.sum(tm_expected_value * mask_pair_chain, dim=-1)
-                / (torch.sum(mask_pair_chain, dim=-1) + 1e-5),
-                dim=1,
-            ).values
-        chain_pair_iptm[idx1] = chain_iptm
-
+    # Chain-pair ipTM as (B, N, N) over chains in ascending asym id order: [b, c1, c2] is the
+    # old dict's [c1][c2], the best row in chain c2 of the mean TM over columns in chain c1.
+    first = ~(asym_id[:, :, None] == asym_id[:, None, :]).tril(-1).any(-1)  # first token per chain
+    chain = ((asym_id[:, None, :] < asym_id[:, :, None]) & first[:, None, :]).sum(-1)
+    columns = nn.functional.one_hot(chain, asym_id.shape[1]) * mask_pad[..., None]
+    with torch.amp.autocast(autocast_device_type(asym_id.device.type), enabled=False):  # fp32 bmm
+        row_sums = torch.bmm(tm_expected_value, columns)
+    rows = (maski * mask_pad)[..., None] * row_sums / (columns.sum(1, keepdim=True) + 1e-5)
+    index = chain[..., None].expand_as(rows)  # rows are >= 0, so a max from 0
+    chain_pair_iptm = torch.zeros_like(rows).scatter_reduce(1, index, rows, "amax").transpose(1, 2)
     return ptm, iptm, ligand_iptm, protein_iptm, chain_pair_iptm

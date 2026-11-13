@@ -61,13 +61,14 @@ class RelativePositionEncoder(Module):
             feats["residue_index"][:, :, None] - feats["residue_index"][:, None, :]
         )
 
-        if self.cyclic_pos_enc and torch.any(feats["cyclic_period"] > 0):
+        if self.cyclic_pos_enc:
             period = torch.where(
                 feats["cyclic_period"] > 0,
                 feats["cyclic_period"],
                 torch.zeros_like(feats["cyclic_period"]) + 10000,
             )
-            d_residue = (d_residue - period * torch.round(d_residue / period)).long()
+            wrapped = (d_residue - period[:, None] * torch.round(d_residue / period[:, None])).long()
+            d_residue = torch.where(torch.any(feats["cyclic_period"] > 0), wrapped, d_residue)
 
         d_residue = torch.clip(
             d_residue + self.r_max,

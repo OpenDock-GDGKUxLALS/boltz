@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import partial
 from math import sqrt
 
 import numpy as np
@@ -21,6 +22,7 @@ from boltz.model.modules.encodersv2 import (
     AtomAttentionDecoder,
     AtomAttentionEncoder,
     SingleConditioning,
+    single_to_keys,
 )
 from boltz.model.modules.transformersv2 import (
     DiffusionTransformer,
@@ -31,6 +33,7 @@ from boltz.model.modules.utils import (
     compute_random_augmentation,
     default,
     log,
+    repeat_step,
 )
 from boltz.model.potentials.potentials import get_potentials
 
@@ -136,13 +139,17 @@ class DiffusionModule(Module):
                 s_inputs.repeat_interleave(multiplicity, 0),
             )
 
+        W, H = self.atoms_per_window_queries, self.atoms_per_window_keys
+        indexing_matrix = diffusion_conditioning["keys_indexing_matrix"]
+        to_keys = partial(single_to_keys, indexing_matrix=indexing_matrix, W=W, H=H)
+
         # Sequence-local Atom Attention and aggregation to coarse-grained tokens
         a, q_skip, c_skip, to_keys = self.atom_attention_encoder(
             feats=feats,
             q=diffusion_conditioning["q"].float(),
             c=diffusion_conditioning["c"].float(),
             atom_enc_bias=diffusion_conditioning["atom_enc_bias"].float(),
-            to_keys=diffusion_conditioning["to_keys"],
+            to_keys=to_keys,
             r=r_noisy,  # Float['b m 3'],
             multiplicity=multiplicity,
         )
@@ -292,6 +299,46 @@ class AtomDiffusion(Module):
         sigmas = F.pad(sigmas, (0, 1), value=0.0)  # last step is sigma value of 0.
         return sigmas
 
+    def step_schedule(self, num_sampling_steps, step_scale):
+        """(sigmas, sigmas and gammas as floats, (steps, 4) tensor of t_hat, noise std, step
+        coefficient and 1 / t_hat), cached: a traced forward can't read device values."""
+        num_sampling_steps = default(num_sampling_steps, self.num_sampling_steps)
+        key = (num_sampling_steps, float(step_scale), str(self.device))
+        cache = self.__dict__.setdefault("_step_schedule_cache", {})
+        if key not in cache:
+            sigmas = self.sample_schedule(num_sampling_steps)
+            gammas = torch.where(sigmas > self.gamma_min, self.gamma_0, 0.0)
+            sigmas_host, gammas_host = sigmas.tolist(), gammas.tolist()
+
+            def row(sigma_tm, sigma_t, gamma):
+                t_hat = sigma_tm * (1 + gamma)
+                noise_std = sqrt(self.noise_scale**2 * (t_hat**2 - sigma_tm**2))
+                # 1 / t_hat in float64: upstream's x / t_hat with a Python float runs as that on CUDA
+                return t_hat, noise_std, step_scale * (sigma_t - t_hat), 1 / t_hat
+
+            rows = [row(*r) for r in zip(sigmas_host[:-1], sigmas_host[1:], gammas_host[1:])]
+            scalars = torch.tensor(rows, dtype=torch.float32, device=self.device)
+            cache[key] = sigmas, sigmas_host, gammas_host, scalars
+        return cache[key]
+
+    def denoise_step(self, atom_mask, chunk_sizes, cond, x, scalars):
+        """One reverse-diffusion step without steering. The first three arguments are fixed
+        per sample() call (bound with partial); scalars = (t_hat, noise std, step coef, 1 / t_hat)."""
+        t_hat, noise_std, step_coef, inv_t_hat = scalars
+        R, tr = compute_random_augmentation(len(x), device=x.device, dtype=x.dtype)
+        x = torch.einsum("bmd,bds->bms", x - x.mean(dim=-2, keepdims=True), R) + tr
+        noisy = x + noise_std * torch.randn(x.shape, device=x.device)
+        with torch.no_grad():
+            denoised = torch.cat([
+                self.preconditioned_network_forward(c, t_hat.expand(len(c)), dict(cond, multiplicity=len(c)))
+                for c in noisy.split(chunk_sizes)
+            ])
+        if self.alignment_reverse_diff:
+            with torch.autocast("cuda", enabled=False):
+                m = atom_mask.float()
+                noisy = weighted_rigid_align(noisy.float(), denoised.float(), m, m).to(denoised)
+        return noisy + step_coef * ((noisy - denoised) * inv_t_hat)
+
     def sample(
         self,
         atom_mask,
@@ -301,12 +348,15 @@ class AtomDiffusion(Module):
         steering_args=None,
         **network_condition_kwargs,
     ):
-        if steering_args is not None and (
-            steering_args["fk_steering"]
-            or steering_args["physical_guidance_update"]
-            or steering_args["contact_guidance_update"]
-        ):
-            potentials = get_potentials(steering_args, boltz2=True)
+        # Potentials without constraints return zeros: drop them once, not in every step.
+        feats = network_condition_kwargs["feats"]
+        potentials = [
+            p
+            for p in get_potentials(steering_args, boltz2=True)
+            if p.compute_args(feats, p.compute_parameters(1.0))[0].shape[1] > 0
+        ]
+        guidance = steering_args["physical_guidance_update"] or steering_args["contact_guidance_update"]
+        use_guidance = guidance and len(potentials) > 0
 
         if steering_args["fk_steering"]:
             multiplicity = multiplicity * steering_args["num_particles"]
@@ -331,20 +381,27 @@ class AtomDiffusion(Module):
 
         shape = (*atom_mask.shape, 3)
 
-        # get the schedule, which is returned as (sigma, gamma) tuple, and pair up with the next sigma and gamma
-        sigmas = self.sample_schedule(num_sampling_steps)
-        gammas = torch.where(sigmas > self.gamma_min, self.gamma_0, 0.0)
-        sigmas_and_gammas = list(zip(sigmas[:-1], sigmas[1:], gammas[1:]))
         if self.training and self.step_scale_random is not None:
             step_scale = np.random.choice(self.step_scale_random)
         else:
             step_scale = self.step_scale
+        sigmas, sigmas_host, gammas_host, step_scalars = self.step_schedule(num_sampling_steps, step_scale)
+        sigmas_and_gammas = list(zip(sigmas_host[:-1], sigmas_host[1:], gammas_host[1:]))
+
+        num_chunks = multiplicity % max_parallel_samples + 1
+        chunk_sizes = [len(c) for c in torch.arange(multiplicity).chunk(num_chunks)]
+        plain = not steering_args["fk_steering"] and not use_guidance
 
         # atom position is noise at the beginning
         init_sigma = sigmas[0]
         atom_coords = init_sigma * torch.randn(shape, device=self.device)
         token_repr = None
         atom_coords_denoised = None
+
+        if plain:
+            step = partial(self.denoise_step, atom_mask, chunk_sizes, network_condition_kwargs)
+            atom_coords = repeat_step(step, atom_coords, step_scalars)
+            return dict(sample_atom_coords=atom_coords, diff_token_repr=token_repr)
 
         # gradually denoise
         for step_idx, (sigma_tm, sigma_t, gamma) in enumerate(sigmas_and_gammas):
@@ -361,15 +418,10 @@ class AtomDiffusion(Module):
                     torch.einsum("bmd,bds->bms", atom_coords_denoised, random_R)
                     + random_tr
                 )
-            if (
-                steering_args["physical_guidance_update"]
-                or steering_args["contact_guidance_update"]
-            ) and scaled_guidance_update is not None:
+            if use_guidance and scaled_guidance_update is not None:
                 scaled_guidance_update = torch.einsum(
                     "bmd,bds->bms", scaled_guidance_update, random_R
                 )
-
-            sigma_tm, sigma_t, gamma = sigma_tm.item(), sigma_t.item(), gamma.item()
 
             t_hat = sigma_tm * (1 + gamma)
             steering_t = 1.0 - (step_idx / num_sampling_steps)
@@ -441,10 +493,7 @@ class AtomDiffusion(Module):
                     )
 
                 # Compute guidance update to x_0 prediction
-                if (
-                    steering_args["physical_guidance_update"]
-                    or steering_args["contact_guidance_update"]
-                ) and step_idx < num_sampling_steps - 1:
+                if use_guidance and step_idx < num_sampling_steps - 1:
                     guidance_update = torch.zeros_like(atom_coords_denoised)
                     for guidance_step in range(steering_args["num_gd_steps"]):
                         energy_gradient = torch.zeros_like(atom_coords_denoised)

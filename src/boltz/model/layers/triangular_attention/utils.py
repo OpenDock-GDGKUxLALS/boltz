@@ -84,7 +84,7 @@ def _fetch_dims(tree):
     elif tree_type is list or tree_type is tuple:
         for t in tree:
             shapes.extend(_fetch_dims(t))
-    elif tree_type is torch.Tensor:
+    elif isinstance(tree, torch.Tensor):
         shapes.append(tree.shape)
     else:
         raise ValueError("Not supported")
@@ -364,7 +364,7 @@ def chunk_layer(
                     x1[i : i + chunk_size] += x2
                 else:
                     x1[i : i + chunk_size] = x2
-        elif out_type is torch.Tensor:
+        elif isinstance(output_chunk, torch.Tensor):
             if _add_into_out:
                 out[i : i + chunk_size] += output_chunk
             else:
