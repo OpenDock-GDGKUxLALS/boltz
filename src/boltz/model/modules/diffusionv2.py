@@ -377,7 +377,9 @@ class AtomDiffusion(Module):
             max_parallel_samples = multiplicity
 
         num_sampling_steps = default(num_sampling_steps, self.num_sampling_steps)
-        atom_mask = atom_mask.repeat_interleave(multiplicity, 0)
+        # Kept as a boolean tensor of its own (each use converts it): a float repeat of 1 is a view
+        # that changes nothing, which AOTInductor frees inside a loop (pytorch/pytorch#204920).
+        atom_mask = atom_mask.repeat_interleave(multiplicity, 0).bool()
 
         shape = (*atom_mask.shape, 3)
 
