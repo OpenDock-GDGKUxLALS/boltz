@@ -31,12 +31,6 @@ def weighted_rigid_align(
     true_coords_centered = true_coords - true_centroid
     pred_coords_centered = pred_coords - pred_centroid
 
-    if torch.any(mask.sum(dim=-1) < (dim + 1)):
-        print(
-            "Warning: The size of one of the point clouds is <= dim+1. "
-            + "`WeightedRigidAlign` cannot return a unique rotation."
-        )
-
     # Compute the weighted covariance matrix
     cov_matrix = einsum(
         weights * pred_coords_centered,
@@ -52,14 +46,6 @@ def weighted_rigid_align(
         cov_matrix_32, driver="gesvd" if cov_matrix_32.is_cuda else None
     )
     V = V.mH
-
-    # Catch ambiguous rotation by checking the magnitude of singular values
-    if (S.abs() <= 1e-15).any() and not (num_points < (dim + 1)):
-        print(
-            "Warning: Excessively low rank of "
-            + "cross-correlation between aligned point clouds. "
-            + "`WeightedRigidAlign` cannot return a unique rotation."
-        )
 
     # Compute the rotation matrix
     rot_matrix = torch.einsum("... i j, ... k j -> ... i k", U, V).to(

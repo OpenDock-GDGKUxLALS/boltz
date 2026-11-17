@@ -35,7 +35,12 @@ from boltz.model.modules.trunkv2 import (
 )
 from boltz.model.optim.ema import EMA
 from boltz.model.optim.scheduler import AlphaFoldLRScheduler
-from boltz.model.modules.utils import autocast_device_type
+from boltz.model.modules.utils import autocast_device_type, repeat_step
+
+
+def confidence_score(complex_plddt: Tensor, iptm: Tensor, ptm: Tensor) -> Tensor:
+    """(4 * pLDDT + ipTM) / 5, or pTM if all ipTM are 0 (allclose without a host sync)."""
+    return (4 * complex_plddt + torch.where((iptm.abs() <= 1e-8).all(), ptm, iptm)) / 5
 
 
 class Boltz2(LightningModule):
@@ -433,10 +438,24 @@ class Boltz2(LightningModule):
             s = torch.zeros_like(s_init)
             z = torch.zeros_like(z_init)
 
-            # Compute pairwise mask
-            mask = feats["token_pad_mask"].float()
-            pair_mask = mask[:, :, None] * mask[:, None, :]
-            if self.run_trunk_and_structure:
+            def uncompiled(module, compiled):
+                return module._orig_mod if compiled and not self.training else module  # noqa: SLF001
+
+            def trunk_pass(s, z):
+                # Masks are built here: a scan body can't take inputs that share memory.
+                mask = feats["token_pad_mask"].float()
+                pair_mask = mask[:, :, None] * mask[:, None, :]
+                s = s_init + self.s_recycle(self.s_norm(s))
+                z = z_init + self.z_recycle(self.z_norm(z))
+                if self.use_templates:
+                    template_module = uncompiled(self.template_module, self.is_template_compiled)
+                    z = z + template_module(z, feats, pair_mask, use_kernels=self.use_kernels)
+                msa_module = uncompiled(self.msa_module, self.is_msa_compiled)
+                z = z + msa_module(z, s_inputs, feats, use_kernels=self.use_kernels)
+                pairformer_module = uncompiled(self.pairformer_module, self.is_pairformer_compiled)
+                return pairformer_module(s, z, mask=mask, pair_mask=pair_mask, use_kernels=self.use_kernels)
+
+            if self.run_trunk_and_structure and self.training:
                 for i in range(recycling_steps + 1):
                     with torch.set_grad_enabled(
                         self.training
@@ -451,43 +470,11 @@ class Boltz2(LightningModule):
                         ):
                             torch.clear_autocast_cache()
 
-                        # Apply recycling
-                        s = s_init + self.s_recycle(self.s_norm(s))
-                        z = z_init + self.z_recycle(self.z_norm(z))
+                        s, z = trunk_pass(s, z)
 
-                        # Compute pairwise stack
-                        if self.use_templates:
-                            if self.is_template_compiled and not self.training:
-                                template_module = self.template_module._orig_mod  # noqa: SLF001
-                            else:
-                                template_module = self.template_module
-
-                            z = z + template_module(
-                                z, feats, pair_mask, use_kernels=self.use_kernels
-                            )
-
-                        if self.is_msa_compiled and not self.training:
-                            msa_module = self.msa_module._orig_mod  # noqa: SLF001
-                        else:
-                            msa_module = self.msa_module
-
-                        z = z + msa_module(
-                            z, s_inputs, feats, use_kernels=self.use_kernels
-                        )
-
-                        # Revert to uncompiled version for validation
-                        if self.is_pairformer_compiled and not self.training:
-                            pairformer_module = self.pairformer_module._orig_mod  # noqa: SLF001
-                        else:
-                            pairformer_module = self.pairformer_module
-
-                        s, z = pairformer_module(
-                            s,
-                            z,
-                            mask=mask,
-                            pair_mask=pair_mask,
-                            use_kernels=self.use_kernels,
-                        )
+            elif self.run_trunk_and_structure:
+                passes = s.new_empty(recycling_steps + 1, 0)
+                s, z = repeat_step(lambda carry, _: trunk_pass(*carry), (s, z), passes)
 
             pdistogram = self.distogram_module(z)
             dict_out = {
@@ -503,7 +490,7 @@ class Boltz2(LightningModule):
             ):
                 if self.checkpoint_diffusion_conditioning and self.training:
                     # TODO decide whether this should be with bf16 or not
-                    q, c, to_keys, atom_enc_bias, atom_dec_bias, token_trans_bias = (
+                    q, c, keys_indexing_matrix, atom_enc_bias, atom_dec_bias, token_trans_bias = (
                         torch.utils.checkpoint.checkpoint(
                             self.diffusion_conditioning,
                             s,
@@ -513,7 +500,7 @@ class Boltz2(LightningModule):
                         )
                     )
                 else:
-                    q, c, to_keys, atom_enc_bias, atom_dec_bias, token_trans_bias = (
+                    q, c, keys_indexing_matrix, atom_enc_bias, atom_dec_bias, token_trans_bias = (
                         self.diffusion_conditioning(
                             s_trunk=s,
                             z_trunk=z,
@@ -524,7 +511,7 @@ class Boltz2(LightningModule):
                 diffusion_conditioning = {
                     "q": q,
                     "c": c,
-                    "to_keys": to_keys,
+                    "keys_indexing_matrix": keys_indexing_matrix,
                     "atom_enc_bias": atom_enc_bias,
                     "atom_dec_bias": atom_dec_bias,
                     "token_trans_bias": token_trans_bias,
@@ -619,11 +606,8 @@ class Boltz2(LightningModule):
             )
             z_affinity = z * cross_pair_mask[None, :, :, None]
 
-            argsort = torch.argsort(dict_out["iptm"], descending=True)
-            best_idx = argsort[0].item()
-            coords_affinity = dict_out["sample_atom_coords"].detach()[best_idx][
-                None, None
-            ]
+            best_idx = torch.argsort(dict_out["iptm"], descending=True)[:1]
+            coords_affinity = dict_out["sample_atom_coords"].detach()[best_idx][None]
             s_inputs = self.input_embedder(feats, affinity=True)
 
             with torch.autocast(autocast_device_type(s.device.type), enabled=False):
@@ -1083,16 +1067,7 @@ class Boltz2(LightningModule):
                 # pred_dict["confidence"] = out.get("ablation_confidence", None)
                 pred_dict["pde"] = out["pde"]
                 pred_dict["plddt"] = out["plddt"]
-                pred_dict["confidence_score"] = (
-                    4 * out["complex_plddt"]
-                    + (
-                        out["iptm"]
-                        if not torch.allclose(
-                            out["iptm"], torch.zeros_like(out["iptm"])
-                        )
-                        else out["ptm"]
-                    )
-                ) / 5
+                pred_dict["confidence_score"] = confidence_score(out["complex_plddt"], out["iptm"], out["ptm"])
 
                 pred_dict["complex_plddt"] = out["complex_plddt"]
                 pred_dict["complex_iplddt"] = out["complex_iplddt"]
@@ -1104,7 +1079,9 @@ class Boltz2(LightningModule):
                     pred_dict["iptm"] = out["iptm"]
                     pred_dict["ligand_iptm"] = out["ligand_iptm"]
                     pred_dict["protein_iptm"] = out["protein_iptm"]
-                    pred_dict["pair_chains_iptm"] = out["pair_chains_iptm"]
+                    ids = list(enumerate(torch.unique(batch["asym_id"]).tolist()))
+                    pair = out["pair_chains_iptm"]
+                    pred_dict["pair_chains_iptm"] = {a: {b: pair[:, i, j] for j, b in ids} for i, a in ids}
             if self.affinity_prediction:
                 pred_dict["affinity_pred_value"] = out["affinity_pred_value"]
                 pred_dict["affinity_probability_binary"] = out[
